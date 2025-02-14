@@ -7,7 +7,7 @@ import (
 
 type (
 	SessionRepository interface {
-		AddSession(context.Context, *domain.Session) error
+		PutSession(context.Context, *domain.Session) error
 		CheckSession(context.Context, *domain.Session) error
 	}
 
@@ -17,8 +17,13 @@ type (
 )
 
 type AuthUsecase struct {
+	userRepo    UserRepository
+	sessionRepo SessionRepository
 }
 
-func NewAuthUsecase() *AuthUsecase {
-	return &AuthUsecase{}
+func NewAuthUsecase(userRepo UserRepository, sessionRepo SessionRepository) *AuthUsecase {
+	return &AuthUsecase{
+		userRepo:    userRepo,
+		sessionRepo: sessionRepo,
+	}
 }
