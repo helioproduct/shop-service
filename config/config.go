@@ -6,4 +6,8 @@ type Config struct {
 
 	ServerConfig struct {
 	}
+
+	JWTConfig struct {
+		Salt string
+	}
 }
