@@ -7,12 +7,12 @@ import (
 
 type (
 	SessionRepository interface {
-		PutSession(context.Context, *domain.Session) error
-		CheckSession(context.Context, *domain.Session) error
+		PutSession(ctx context.Context, session *domain.Session) error
+		CheckSession(ctx context.Context, session *domain.Session) error
 	}
 
 	UserRepository interface {
-		CreateUser(context.Context, string, string) (*domain.User, error)
+		CreateUser(ctx context.Context, username string, password string) (*domain.User, error)
 	}
 )
 
