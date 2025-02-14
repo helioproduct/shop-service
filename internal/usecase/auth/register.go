@@ -1,7 +1,10 @@
 package auth
 
-import "merch-service/internal/domain"
+import (
+	"context"
+	"merch-service/internal/domain"
+)
 
-func (u *AuthUsecase) Register(username, password string) *domain.User {
-	return &domain.User{}
+func (uc *AuthUsecase) Register(ctx context.Context, username, password string) (*domain.Session, error) {
+	return nil, nil
 }
