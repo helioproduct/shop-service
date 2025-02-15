@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	trmsql "github.com/avito-tech/go-transaction-manager/drivers/sql/v2"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -28,7 +29,7 @@ func TestProductRepository_GetProductByName(t *testing.T) {
 	defer db.Close()
 
 	// Создаем репозиторий с sqlmock
-	repo := postgres.NewProductRepository(db)
+	repo := postgres.NewProductRepository(db, trmsql.DefaultCtxGetter)
 
 	productName := "Test Product"
 	expectedProduct := &domain.Product{

@@ -30,9 +30,8 @@ func (repo *UserRepository) CreateUser(ctx context.Context, req *CreateUserReque
 		return nil, err
 	}
 
-	trOrDB := repo.txGetter.DefaultTrOrDB(ctx, repo.db)
-
 	var user domain.User
+	trOrDB := repo.txGetter.DefaultTrOrDB(ctx, repo.db)
 	if err := trOrDB.QueryRowContext(ctx, query, args...).
 		Scan(&user.ID, &user.Username, &user.Balance); err != nil {
 		err = fmt.Errorf("failed to insert user: %w", err)

@@ -26,7 +26,8 @@ func (repo *ProductRepository) GetProductByName(ctx context.Context, name string
 	}
 
 	var product domain.Product
-	if err := repo.DB.QueryRowContext(ctx, query, args...).
+	txOrDB := repo.txGetter.DefaultTrOrDB(ctx, repo.DB)
+	if err := txOrDB.QueryRowContext(ctx, query, args...).
 		Scan(&product.ID, &product.Name, &product.Price); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, domain.ErrProductNotFound

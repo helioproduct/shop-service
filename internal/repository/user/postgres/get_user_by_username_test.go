@@ -24,7 +24,6 @@ func TestUserRepository_GetUserByUsername(t *testing.T) {
 
 	repo := postgres.NewUserRepository(db, trmsql.DefaultCtxGetter)
 
-	// Тестовые данные
 	username := "test_user"
 	expectedUser := &domain.User{
 		ID:       1,

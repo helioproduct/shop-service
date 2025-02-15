@@ -25,9 +25,8 @@ func (repo *UserRepository) GetUserByUsername(ctx context.Context, username stri
 		return nil, err
 	}
 
-	trOrDB := repo.txGetter.DefaultTrOrDB(ctx, repo.db)
-
 	var user domain.User
+	trOrDB := repo.txGetter.DefaultTrOrDB(ctx, repo.db)
 	if err := trOrDB.QueryRowContext(ctx, query, args...).
 		Scan(&user.ID, &user.Username, &user.Balance); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
