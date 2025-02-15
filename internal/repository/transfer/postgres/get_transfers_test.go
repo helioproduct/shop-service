@@ -92,4 +92,122 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
+
+	t.Run("Success - Filter by FromUserID only", func(t *testing.T) {
+		fromUserID := domain.UserID(1)
+
+		filter := &postgres.GetTransfersFilter{
+			FromUserID: &fromUserID,
+		}
+
+		mock.ExpectQuery(`SELECT id, from_user_id, to_user_id, amount, created_at FROM transfers`).
+			WithArgs(fromUserID).
+			WillReturnRows(sqlmock.NewRows([]string{"id", "from_user_id", "to_user_id", "amount", "created_at"}).
+				AddRow("t1", fromUserID, 2, 150, time.Now()).
+				AddRow("t2", fromUserID, 3, 200, time.Now()))
+
+		results, err := repo.GetTransfers(ctx, filter)
+		require.NoError(t, err)
+		require.Len(t, results, 2)
+
+		assert.Equal(t, domain.TransferID("t1"), results[0].ID)
+		assert.Equal(t, fromUserID, results[0].From)
+		assert.Equal(t, uint64(150), results[0].Amount)
+
+		assert.Equal(t, domain.TransferID("t2"), results[1].ID)
+		assert.Equal(t, fromUserID, results[1].From)
+		assert.Equal(t, uint64(200), results[1].Amount)
+
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
+
+	t.Run("No results for FromUserID", func(t *testing.T) {
+		fromUserID := domain.UserID(100)
+
+		filter := &postgres.GetTransfersFilter{
+			FromUserID: &fromUserID,
+		}
+
+		mock.ExpectQuery(`SELECT id, from_user_id, to_user_id, amount, created_at FROM transfers`).
+			WithArgs(fromUserID).
+			WillReturnRows(sqlmock.NewRows([]string{"id", "from_user_id", "to_user_id", "amount", "created_at"}))
+
+		results, err := repo.GetTransfers(ctx, filter)
+		require.NoError(t, err)
+		assert.Len(t, results, 0)
+
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
+
+	t.Run("Success - Filter by ToUserID only", func(t *testing.T) {
+		toUserID := domain.UserID(2)
+
+		filter := &postgres.GetTransfersFilter{
+			ToUserID: &toUserID,
+		}
+
+		mock.ExpectQuery(`SELECT id, from_user_id, to_user_id, amount, created_at FROM transfers`).
+			WithArgs(toUserID).
+			WillReturnRows(sqlmock.NewRows([]string{"id", "from_user_id", "to_user_id", "amount", "created_at"}).
+				AddRow("t3", 1, toUserID, 300, time.Now()).
+				AddRow("t4", 5, toUserID, 400, time.Now()))
+
+		results, err := repo.GetTransfers(ctx, filter)
+		require.NoError(t, err)
+		require.Len(t, results, 2)
+
+		assert.Equal(t, domain.TransferID("t3"), results[0].ID)
+		assert.Equal(t, toUserID, results[0].To)
+		assert.Equal(t, uint64(300), results[0].Amount)
+
+		assert.Equal(t, domain.TransferID("t4"), results[1].ID)
+		assert.Equal(t, toUserID, results[1].To)
+		assert.Equal(t, uint64(400), results[1].Amount)
+
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
+
+	t.Run("No results for ToUserID", func(t *testing.T) {
+		toUserID := domain.UserID(999)
+
+		filter := &postgres.GetTransfersFilter{
+			ToUserID: &toUserID,
+		}
+
+		mock.ExpectQuery(`SELECT id, from_user_id, to_user_id, amount, created_at FROM transfers`).
+			WithArgs(toUserID).
+			WillReturnRows(sqlmock.NewRows([]string{"id", "from_user_id", "to_user_id", "amount", "created_at"}))
+
+		results, err := repo.GetTransfers(ctx, filter)
+		require.NoError(t, err)
+		assert.Len(t, results, 0)
+
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
+
+	t.Run("Success - Filter by FromUserID and ToUserID", func(t *testing.T) {
+		fromUserID := domain.UserID(10)
+		toUserID := domain.UserID(20)
+
+		filter := &postgres.GetTransfersFilter{
+			FromUserID: &fromUserID,
+			ToUserID:   &toUserID,
+		}
+
+		mock.ExpectQuery(`SELECT id, from_user_id, to_user_id, amount, created_at FROM transfers`).
+			WithArgs(fromUserID, toUserID).
+			WillReturnRows(sqlmock.NewRows([]string{"id", "from_user_id", "to_user_id", "amount", "created_at"}).
+				AddRow("t10", fromUserID, toUserID, 500, time.Now()))
+
+		results, err := repo.GetTransfers(ctx, filter)
+		require.NoError(t, err)
+		require.Len(t, results, 1)
+
+		assert.Equal(t, domain.TransferID("t10"), results[0].ID)
+		assert.Equal(t, fromUserID, results[0].From)
+		assert.Equal(t, toUserID, results[0].To)
+		assert.Equal(t, uint64(500), results[0].Amount)
+
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
 }
