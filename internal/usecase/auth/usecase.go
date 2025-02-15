@@ -2,7 +2,7 @@ package auth
 
 import (
 	"context"
-	"merch-service/internal/domain"
+	"shop-service/internal/domain"
 )
 
 type (

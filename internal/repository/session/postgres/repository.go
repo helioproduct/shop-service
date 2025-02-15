@@ -1,6 +1,6 @@
 package postgres
 
-import "merch-service/config"
+import "shop-service/config"
 
 type SessionRepository struct {
 	cfg *config.Config

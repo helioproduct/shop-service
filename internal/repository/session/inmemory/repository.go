@@ -1,8 +1,8 @@
 package inmemory
 
 import (
-	"merch-service/config"
-	"merch-service/internal/domain"
+	"shop-service/config"
+	"shop-service/internal/domain"
 	"sync"
 )
 
