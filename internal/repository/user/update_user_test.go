@@ -1,10 +1,10 @@
-package postgres_test
+package user_test
 
 import (
 	"context"
 	"errors"
 	"shop-service/internal/domain"
-	"shop-service/internal/repository/user/postgres"
+	userRepo "shop-service/internal/repository/user"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -20,14 +20,14 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 	require.NoError(t, err)
 	defer db.Close()
 
-	repo := postgres.NewUserRepository(db, trmsql.DefaultCtxGetter)
+	repo := userRepo.NewUserRepository(db, trmsql.DefaultCtxGetter)
 
 	username := "new_username"
 	hashedPassword := "new_hashed_password"
 	balance := uint64(200)
 
 	t.Run("Success - Update all fields", func(t *testing.T) {
-		req := &postgres.UpdateUserRequest{
+		req := &userRepo.UpdateUserRequest{
 			UserID:         1,
 			Username:       &username,
 			HashedPassword: &hashedPassword,
@@ -45,7 +45,7 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 	})
 
 	t.Run("Success - Update username only", func(t *testing.T) {
-		req := &postgres.UpdateUserRequest{
+		req := &userRepo.UpdateUserRequest{
 			UserID:   2,
 			Username: &username,
 		}
@@ -61,7 +61,7 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 	})
 
 	t.Run("User Not Found", func(t *testing.T) {
-		req := &postgres.UpdateUserRequest{
+		req := &userRepo.UpdateUserRequest{
 			UserID:   999,
 			Username: &username,
 		}
@@ -77,7 +77,7 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 	})
 
 	t.Run("Database Error", func(t *testing.T) {
-		req := &postgres.UpdateUserRequest{
+		req := &userRepo.UpdateUserRequest{
 			UserID:   3,
 			Username: &username,
 		}
@@ -94,7 +94,7 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 	})
 
 	t.Run("Error Getting Rows Affected", func(t *testing.T) {
-		req := &postgres.UpdateUserRequest{
+		req := &userRepo.UpdateUserRequest{
 			UserID:   4,
 			Username: &username,
 		}

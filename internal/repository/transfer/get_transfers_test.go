@@ -1,12 +1,13 @@
-package postgres_test
+package transfer_test
 
 import (
 	"context"
 	"errors"
 	"shop-service/internal/domain"
-	"shop-service/internal/repository/transfer/postgres"
 	"testing"
 	"time"
+
+	"shop-service/internal/repository/transfer"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	trmsql "github.com/avito-tech/go-transaction-manager/drivers/sql/v2"
@@ -21,7 +22,7 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 	require.NoError(t, err)
 	defer db.Close()
 
-	repo := postgres.NewTransferRepository(db, trmsql.DefaultCtxGetter)
+	repo := transfer.NewTransferRepository(db, trmsql.DefaultCtxGetter)
 
 	t.Run("Success with filters", func(t *testing.T) {
 		fromUserID := domain.UserID(1)
@@ -29,7 +30,7 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 		limit := uint64(5)
 		offset := uint64(0)
 
-		filter := &postgres.GetTransfersFilter{
+		filter := &transfer.GetTransfersFilter{
 			FromUserID: &fromUserID,
 			ToUserID:   &toUserID,
 			Limit:      limit,
@@ -59,7 +60,7 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 
 	t.Run("Database error", func(t *testing.T) {
 		fromUserID := domain.UserID(1)
-		filter := &postgres.GetTransfersFilter{
+		filter := &transfer.GetTransfersFilter{
 			FromUserID: &fromUserID,
 		}
 
@@ -77,7 +78,7 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 
 	t.Run("Scan error", func(t *testing.T) {
 		fromUserID := domain.UserID(1)
-		filter := &postgres.GetTransfersFilter{
+		filter := &transfer.GetTransfersFilter{
 			FromUserID: &fromUserID,
 		}
 
@@ -96,7 +97,7 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 	t.Run("Success - Filter by FromUserID only", func(t *testing.T) {
 		fromUserID := domain.UserID(1)
 
-		filter := &postgres.GetTransfersFilter{
+		filter := &transfer.GetTransfersFilter{
 			FromUserID: &fromUserID,
 		}
 
@@ -124,7 +125,7 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 	t.Run("No results for FromUserID", func(t *testing.T) {
 		fromUserID := domain.UserID(100)
 
-		filter := &postgres.GetTransfersFilter{
+		filter := &transfer.GetTransfersFilter{
 			FromUserID: &fromUserID,
 		}
 
@@ -142,7 +143,7 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 	t.Run("Success - Filter by ToUserID only", func(t *testing.T) {
 		toUserID := domain.UserID(2)
 
-		filter := &postgres.GetTransfersFilter{
+		filter := &transfer.GetTransfersFilter{
 			ToUserID: &toUserID,
 		}
 
@@ -170,7 +171,7 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 	t.Run("No results for ToUserID", func(t *testing.T) {
 		toUserID := domain.UserID(999)
 
-		filter := &postgres.GetTransfersFilter{
+		filter := &transfer.GetTransfersFilter{
 			ToUserID: &toUserID,
 		}
 
@@ -189,7 +190,7 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 		fromUserID := domain.UserID(10)
 		toUserID := domain.UserID(20)
 
-		filter := &postgres.GetTransfersFilter{
+		filter := &transfer.GetTransfersFilter{
 			FromUserID: &fromUserID,
 			ToUserID:   &toUserID,
 		}

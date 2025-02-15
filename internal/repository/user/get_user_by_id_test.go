@@ -1,12 +1,11 @@
-package postgres_test
+package user_test
 
 import (
 	"context"
 	"database/sql"
-	"database/sql/driver"
 	"errors"
 	"shop-service/internal/domain"
-	"shop-service/internal/repository/user/postgres"
+	userRepo "shop-service/internal/repository/user"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -15,64 +14,59 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestUserRepository_GetUserByUsername(t *testing.T) {
+// Тест GetUserByID
+func TestUserRepository_GetUserByID(t *testing.T) {
 	ctx := context.Background()
 
 	db, mock, err := sqlmock.New()
 	require.NoError(t, err)
 	defer db.Close()
 
-	repo := postgres.NewUserRepository(db, trmsql.DefaultCtxGetter)
+	repo := userRepo.NewUserRepository(db, trmsql.DefaultCtxGetter)
 
+	userID := domain.UserID(42)
 	username := "test_user"
-	expectedUser := &domain.User{
-		ID:       1,
-		Username: username,
-		Balance:  100,
-	}
-
-	args := []driver.Value{username}
+	balance := uint64(100)
 
 	t.Run("Success", func(t *testing.T) {
 		mock.ExpectQuery(`SELECT id, username, balance FROM users`).
-			WithArgs(args...).
+			WithArgs(userID).
 			WillReturnRows(sqlmock.NewRows([]string{"id", "username", "balance"}).
-				AddRow(expectedUser.ID, expectedUser.Username, expectedUser.Balance))
+				AddRow(userID, username, balance))
 
-		user, err := repo.GetUserByUsername(ctx, username)
+		user, err := repo.GetUserByID(ctx, userID)
 		require.NoError(t, err)
 		require.NotNil(t, user)
 
-		assert.Equal(t, expectedUser.ID, user.ID)
-		assert.Equal(t, expectedUser.Username, user.Username)
-		assert.Equal(t, expectedUser.Balance, user.Balance)
+		assert.Equal(t, userID, user.ID)
+		assert.Equal(t, username, user.Username)
+		assert.Equal(t, balance, user.Balance)
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
 	t.Run("User Not Found", func(t *testing.T) {
 		mock.ExpectQuery(`SELECT id, username, balance FROM users`).
-			WithArgs(args...).
+			WithArgs(userID).
 			WillReturnError(sql.ErrNoRows)
 
-		user, err := repo.GetUserByUsername(ctx, username)
-		require.Error(t, err)
+		user, err := repo.GetUserByID(ctx, userID)
+		require.ErrorIs(t, err, domain.ErrUserNotFound)
 		require.Nil(t, user)
 
-		assert.ErrorIs(t, err, domain.ErrUserNotFound)
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
-	t.Run("Query Error", func(t *testing.T) {
+	t.Run("Database Error", func(t *testing.T) {
 		mock.ExpectQuery(`SELECT id, username, balance FROM users`).
-			WithArgs(args...).
+			WithArgs(userID).
 			WillReturnError(errors.New("database error"))
 
-		user, err := repo.GetUserByUsername(ctx, username)
+		user, err := repo.GetUserByID(ctx, userID)
 		require.Error(t, err)
+		assert.Contains(t, err.Error(), "failed to execute GetUserByID query")
 		require.Nil(t, user)
 
-		assert.Contains(t, err.Error(), "failed to execute GetUserByUsername query")
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 }

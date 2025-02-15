@@ -1,4 +1,4 @@
-package postgres_test
+package product_test
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"database/sql/driver"
 	"errors"
 	"shop-service/internal/domain"
-	"shop-service/internal/repository/product/postgres"
+	"shop-service/internal/repository/product"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -23,13 +23,11 @@ func init() {
 func TestProductRepository_GetProductByName(t *testing.T) {
 	ctx := context.Background()
 
-	// Создаем mock для базы данных
 	db, mock, err := sqlmock.New()
 	require.NoError(t, err)
 	defer db.Close()
 
-	// Создаем репозиторий с sqlmock
-	repo := postgres.NewProductRepository(db, trmsql.DefaultCtxGetter)
+	repo := product.NewProductRepository(db, trmsql.DefaultCtxGetter)
 
 	productName := "Test Product"
 	expectedProduct := &domain.Product{
@@ -40,7 +38,6 @@ func TestProductRepository_GetProductByName(t *testing.T) {
 
 	args := []driver.Value{productName}
 
-	// 1️⃣ Успешный кейс
 	t.Run("Success", func(t *testing.T) {
 		mock.ExpectQuery(`SELECT id, name, price FROM products`).
 			WithArgs(args...).
@@ -58,7 +55,6 @@ func TestProductRepository_GetProductByName(t *testing.T) {
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
-	// 2️⃣ Товар не найден
 	t.Run("Product Not Found", func(t *testing.T) {
 		mock.ExpectQuery(`SELECT id, name, price FROM products`).
 			WithArgs(args...).
@@ -71,7 +67,6 @@ func TestProductRepository_GetProductByName(t *testing.T) {
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 
-	// 3️⃣ Ошибка выполнения запроса
 	t.Run("Database Error", func(t *testing.T) {
 		mock.ExpectQuery(`SELECT id, name, price FROM products`).
 			WithArgs(args...).

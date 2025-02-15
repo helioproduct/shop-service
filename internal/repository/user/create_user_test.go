@@ -1,11 +1,12 @@
-package postgres_test
+package user_test
 
 import (
 	"context"
 	"database/sql/driver"
 	"errors"
 	"shop-service/internal/domain"
-	"shop-service/internal/repository/user/postgres"
+
+	userRepo "shop-service/internal/repository/user"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -26,9 +27,9 @@ func TestUserRepository_CreateUser(t *testing.T) {
 	assert.NoError(t, err)
 	defer db.Close()
 
-	repo := postgres.NewUserRepository(db, trmsql.DefaultCtxGetter)
+	repo := userRepo.NewUserRepository(db, trmsql.DefaultCtxGetter)
 
-	req := &postgres.CreateUserRequest{
+	req := &userRepo.CreateUserRequest{
 		Username:       "test_user",
 		HashedPassword: "hashed_password",
 		Balance:        100,

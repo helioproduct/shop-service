@@ -1,10 +1,10 @@
-package postgres_test
+package transfer_test
 
 import (
 	"context"
 	"errors"
 	"shop-service/internal/domain"
-	"shop-service/internal/repository/transfer/postgres"
+	"shop-service/internal/repository/transfer"
 
 	"testing"
 	"time"
@@ -22,7 +22,7 @@ func TestTransferRepository_CreateTransfer(t *testing.T) {
 	require.NoError(t, err)
 	defer db.Close()
 
-	repo := postgres.NewTransferRepository(db, trmsql.DefaultCtxGetter)
+	repo := transfer.NewTransferRepository(db, trmsql.DefaultCtxGetter)
 
 	t.Run("Success", func(t *testing.T) {
 		transfer := &domain.Transfer{
