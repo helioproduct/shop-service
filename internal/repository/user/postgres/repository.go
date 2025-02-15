@@ -2,14 +2,18 @@ package postgres
 
 import (
 	"database/sql"
+
+	trmsql "github.com/avito-tech/go-transaction-manager/drivers/sql/v2"
 )
 
 type UserRepository struct {
-	DB *sql.DB
+	db       *sql.DB
+	txGetter *trmsql.CtxGetter
 }
 
-func NewUserRepository(db *sql.DB) *UserRepository {
+func NewUserRepository(db *sql.DB, txGetter *trmsql.CtxGetter) *UserRepository {
 	return &UserRepository{
-		DB: db,
+		db:       db,
+		txGetter: txGetter,
 	}
 }

@@ -5,6 +5,8 @@ go 1.23.5
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2 // indirect
 	github.com/Masterminds/squirrel v1.5.4 // indirect
+	github.com/avito-tech/go-transaction-manager/drivers/sql/v2 v2.0.0 // indirect
+	github.com/avito-tech/go-transaction-manager/trm/v2 v2.0.0-rc9.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.14.3 // indirect
@@ -24,6 +26,8 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rs/zerolog v1.33.0 // indirect
 	github.com/stretchr/testify v1.10.0 // indirect
+	go.uber.org/atomic v1.7.0 // indirect
+	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect

@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	trmsql "github.com/avito-tech/go-transaction-manager/drivers/sql/v2"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 )
@@ -25,7 +26,7 @@ func TestUserRepository_CreateUser(t *testing.T) {
 	assert.NoError(t, err)
 	defer db.Close()
 
-	repo := postgres.NewUserRepository(db)
+	repo := postgres.NewUserRepository(db, trmsql.DefaultCtxGetter)
 
 	req := &postgres.CreateUserRequest{
 		Username:       "test_user",

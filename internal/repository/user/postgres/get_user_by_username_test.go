@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	trmsql "github.com/avito-tech/go-transaction-manager/drivers/sql/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -21,7 +22,7 @@ func TestUserRepository_GetUserByUsername(t *testing.T) {
 	require.NoError(t, err)
 	defer db.Close()
 
-	repo := postgres.NewUserRepository(db)
+	repo := postgres.NewUserRepository(db, trmsql.DefaultCtxGetter)
 
 	// Тестовые данные
 	username := "test_user"

@@ -42,7 +42,9 @@ func (repo *UserRepository) UpdateUser(ctx context.Context, req *UpdateUserReque
 		return err
 	}
 
-	result, err := repo.DB.ExecContext(ctx, query, args...)
+	trOrDB := repo.txGetter.DefaultTrOrDB(ctx, repo.db)
+
+	result, err := trOrDB.ExecContext(ctx, query, args...)
 	if err != nil {
 		err = fmt.Errorf("failed to execute UpdateUser query: %w", err)
 		log.Err(err).Str("caller", caller).Send()
