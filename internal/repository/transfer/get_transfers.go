@@ -17,7 +17,7 @@ type GetTransfersFilter struct {
 	Offset     uint64
 }
 
-func (repo *TransferRepository) GetTransfers(ctx context.Context, filter *GetTransfersFilter) ([]domain.Transfer, error) {
+func (r *TransferRepository) GetTransfers(ctx context.Context, filter *GetTransfersFilter) ([]domain.Transfer, error) {
 	caller := "TransferRepository.GetTransfers"
 
 	queryBuilder := sq.Select("id", "from_user_id", "to_user_id", "amount", "created_at").
@@ -45,7 +45,7 @@ func (repo *TransferRepository) GetTransfers(ctx context.Context, filter *GetTra
 		return nil, err
 	}
 
-	trOrDB := repo.txGetter.DefaultTrOrDB(ctx, repo.db)
+	trOrDB := r.txGetter.DefaultTrOrDB(ctx, r.db)
 	rows, err := trOrDB.QueryContext(ctx, query, args...)
 	if err != nil {
 		err = fmt.Errorf("failed to execute GetTransfers query: %w", err)

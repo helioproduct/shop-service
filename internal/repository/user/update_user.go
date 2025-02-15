@@ -17,7 +17,7 @@ type UpdateUserRequest struct {
 	Balance        *uint64
 }
 
-func (repo *UserRepository) UpdateUser(ctx context.Context, req *UpdateUserRequest) error {
+func (r *UserRepository) UpdateUser(ctx context.Context, req *UpdateUserRequest) error {
 	caller := "UserRepository.UpdateUser"
 
 	queryBuilder := sq.Update("users").
@@ -42,7 +42,7 @@ func (repo *UserRepository) UpdateUser(ctx context.Context, req *UpdateUserReque
 		return err
 	}
 
-	trOrDB := repo.txGetter.DefaultTrOrDB(ctx, repo.db)
+	trOrDB := r.txGetter.DefaultTrOrDB(ctx, r.db)
 	result, err := trOrDB.ExecContext(ctx, query, args...)
 	if err != nil {
 		err = fmt.Errorf("failed to execute UpdateUser query: %w", err)

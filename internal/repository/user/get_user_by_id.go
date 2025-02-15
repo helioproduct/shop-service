@@ -11,7 +11,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func (repo *UserRepository) GetUserByID(ctx context.Context, userID domain.UserID) (*domain.User, error) {
+func (r *UserRepository) GetUserByID(ctx context.Context, userID domain.UserID) (*domain.User, error) {
 	caller := "UserRepository.GetUserByID"
 
 	query, args, err := sq.Select("id", "username", "balance").
@@ -26,7 +26,7 @@ func (repo *UserRepository) GetUserByID(ctx context.Context, userID domain.UserI
 	}
 
 	var user domain.User
-	trOrDB := repo.txGetter.DefaultTrOrDB(ctx, repo.db)
+	trOrDB := r.txGetter.DefaultTrOrDB(ctx, r.db)
 	if err := trOrDB.QueryRowContext(ctx, query, args...).
 		Scan(&user.ID, &user.Username, &user.Balance); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {

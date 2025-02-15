@@ -9,7 +9,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func (repo *TransferRepository) CreateTransfer(ctx context.Context, transfer *domain.Transfer) (*domain.Transfer, error) {
+func (r *TransferRepository) CreateTransfer(ctx context.Context, transfer *domain.Transfer) (*domain.Transfer, error) {
 	caller := "TransferRepository.CreateTransfer"
 
 	query, args, err := sq.Insert("transfers").
@@ -25,7 +25,7 @@ func (repo *TransferRepository) CreateTransfer(ctx context.Context, transfer *do
 	}
 
 	var createdTransfer domain.Transfer
-	trOrDB := repo.txGetter.DefaultTrOrDB(ctx, repo.db)
+	trOrDB := r.txGetter.DefaultTrOrDB(ctx, r.db)
 	if err := trOrDB.QueryRowContext(ctx, query, args...).
 		Scan(&createdTransfer.ID, &createdTransfer.Time); err != nil {
 		err = fmt.Errorf("failed to execute CreateTransfer query: %w", err)

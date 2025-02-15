@@ -10,7 +10,6 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// GetProductByName получает товар по имени
 func (repo *ProductRepository) GetProductByName(ctx context.Context, name string) (*domain.Product, error) {
 	caller := "ProductRepository.GetProductByName"
 

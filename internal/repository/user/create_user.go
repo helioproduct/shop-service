@@ -15,7 +15,7 @@ type CreateUserRequest struct {
 	Balance        int
 }
 
-func (repo *UserRepository) CreateUser(ctx context.Context, req *CreateUserRequest) (*domain.User, error) {
+func (r *UserRepository) CreateUser(ctx context.Context, req *CreateUserRequest) (*domain.User, error) {
 	caller := "UserRepository.CreateUser"
 
 	query, args, err := sq.Insert("users").
@@ -31,7 +31,7 @@ func (repo *UserRepository) CreateUser(ctx context.Context, req *CreateUserReque
 	}
 
 	var user domain.User
-	trOrDB := repo.txGetter.DefaultTrOrDB(ctx, repo.db)
+	trOrDB := r.txGetter.DefaultTrOrDB(ctx, r.db)
 	if err := trOrDB.QueryRowContext(ctx, query, args...).
 		Scan(&user.ID, &user.Username, &user.Balance); err != nil {
 		err = fmt.Errorf("failed to insert user: %w", err)

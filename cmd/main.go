@@ -1,14 +1,8 @@
 package main
 
-import (
-	"shop-service/internal/repository/user/postgres"
-)
+import "fmt"
 
 func main() {
-	// fmt.Println("hello")
-	repo := postgres.NewUserRepository(nil)
-	repo.CreateUser(nil, nil)
-
-	// zerolog.CallerMarshalFunc = func()
+	fmt.Println("hello")
 
 }
