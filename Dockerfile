@@ -1,11 +1,11 @@
-FROM golang:1.22
+FROM golang:1.23
 
-WORKDIR ${GOPATH}/avito-shop/
-COPY . ${GOPATH}/avito-shop/
+WORKDIR ${GOPATH}/shop-service/
+COPY . ${GOPATH}/shop-service/
 
-RUN go build -o /build ./internal/cmd \
+RUN go build -o /bin/app ./cmd/main.go \
     && go clean -cache -modcache
 
 EXPOSE 8080
 
-CMD ["/build"]
+CMD ["/bin/app"]

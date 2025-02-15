@@ -1,0 +1,5 @@
+-- +goose Down
+DROP TABLE IF EXISTS transfers;
+DROP TABLE IF EXISTS purchases;
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS users;

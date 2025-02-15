@@ -2,10 +2,10 @@ package domain
 
 import "time"
 
-type TransactionID string
+type TransferID string
 
-type Transaction struct {
-	ID     TransactionID
+type Transfer struct {
+	ID     TransferID
 	From   UserID
 	To     UserID
 	Amount uint64
