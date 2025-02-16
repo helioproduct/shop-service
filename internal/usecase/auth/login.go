@@ -19,15 +19,12 @@ func (uc *AuthUsecase) Login(ctx context.Context, req LoginRequest) (*domain.Ses
 
 	hashedPassword, err := uc.userRepo.GetUserHashedPassword(ctx, req.Username)
 	if err != nil {
-		err = fmt.Errorf("failed to get user hashed password: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, fmt.Errorf("failed to get user's hashed passowrd: %w", err)
 	}
 
-	if !hasher.HashAndCompare(req.Password, hashedPassword) {
-		err = fmt.Errorf("invalid password")
-		logger.Error(err, caller)
-		return nil, err
+	if !hasher.CompareHashedPassword(hashedPassword, req.Password) {
+		return nil, domain.ErrInvalidCredentials
 	}
 
 	token, err := uc.generateJWT(&domain.User{Username: req.Username})

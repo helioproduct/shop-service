@@ -47,7 +47,7 @@ func (uc *AuthUsecase) Register(ctx context.Context, req RegisterRequest) (*doma
 }
 
 func (r *RegisterRequest) mapRegisterRequest() (*userRepository.CreateUserRequest, error) {
-	hashedPassword := hasher.HashPassword(r.Password)
+	hashedPassword, _ := hasher.HashPassword(r.Password)
 	return &userRepository.CreateUserRequest{
 		Username:       r.Username,
 		HashedPassword: hashedPassword,

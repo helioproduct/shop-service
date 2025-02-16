@@ -26,9 +26,11 @@ var (
 	ErrInsufficientBalance = errors.New("insufficient balance")
 )
 
+// auth
 var (
 	ErrParsingToken         = errors.New("error parsing token")
 	ErrInvalidToken         = errors.New("invalid token")
 	ErrExpiredToken         = errors.New("token expired")
 	ErrTokenSessionMismatch = errors.New("session data mismatch")
+	ErrInvalidCredentials   = errors.New("invalid credentials")
 )

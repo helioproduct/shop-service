@@ -46,6 +46,15 @@ func main() {
 	app := fiber.New()
 	app.Use(middleware.ZerologMiddleware())
 
+	authMiddleware := middleware.NewAuthMiddleware(authUC)
+	api := app.Group("/api", authMiddleware.Handle())
+	api.Get("/profile", func(c *fiber.Ctx) error {
+		session, _ := middleware.GetSessionFromContext(c)
+		return c.JSON(fiber.Map{
+			"message": "Hello, " + session.Username,
+		})
+	})
+
 	authHandlers.SetupAuthRoutes(app, authHandler)
 
 	logger.Log.Info().Msg("Starting Fiber server on port 8080...")

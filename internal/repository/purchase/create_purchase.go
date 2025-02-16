@@ -27,7 +27,7 @@ func (r *PurchaseRepository) CreatePurchase(ctx context.Context, req CreatePurch
 	if err != nil {
 		err = fmt.Errorf("failed to build CreatePurchase query: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInternalError
 	}
 
 	var purchase domain.Purchase
@@ -41,7 +41,7 @@ func (r *PurchaseRepository) CreatePurchase(ctx context.Context, req CreatePurch
 	); err != nil {
 		err = fmt.Errorf("failed to execute CreatePurchase query: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInternalError
 	}
 
 	return &purchase, nil

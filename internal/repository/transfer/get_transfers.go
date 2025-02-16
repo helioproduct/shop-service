@@ -57,7 +57,7 @@ func (r *TransferRepository) GetTransfers(ctx context.Context, filter GetTransfe
 	if err != nil {
 		err = fmt.Errorf("failed to build GetTransfers query: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInternalError
 	}
 
 	trOrDB := r.txGetter.DefaultTrOrDB(ctx, r.db)
@@ -65,7 +65,7 @@ func (r *TransferRepository) GetTransfers(ctx context.Context, filter GetTransfe
 	if err != nil {
 		err = fmt.Errorf("failed to execute GetTransfers query: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInternalError
 	}
 	defer rows.Close()
 
@@ -79,7 +79,7 @@ func (r *TransferRepository) GetTransfers(ctx context.Context, filter GetTransfe
 		); err != nil {
 			err = fmt.Errorf("failed to scan GetTransfers result: %w", err)
 			logger.Error(err, caller)
-			return nil, err
+			return nil, domain.ErrInternalError
 		}
 		t.FromUsername = fromUsername
 		t.ToUsername = toUsername
@@ -87,7 +87,8 @@ func (r *TransferRepository) GetTransfers(ctx context.Context, filter GetTransfe
 	}
 
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("rows error in GetTransfers: %w", err)
+		logger.Error(err, caller)
+		return nil, domain.ErrInternalError
 	}
 
 	return transfers, nil

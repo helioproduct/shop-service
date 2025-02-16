@@ -42,7 +42,7 @@ func (r *PurchaseRepository) GetPurchaseSummary(ctx context.Context, req Purchas
 	if err != nil {
 		err = fmt.Errorf("failed to build GetPurchaseSummary query: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInternalError
 	}
 
 	trOrDB := r.txGetter.DefaultTrOrDB(ctx, r.db)
@@ -50,7 +50,7 @@ func (r *PurchaseRepository) GetPurchaseSummary(ctx context.Context, req Purchas
 	if err != nil {
 		err = fmt.Errorf("failed to execute GetPurchaseSummary query: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInternalError
 	}
 	defer rows.Close()
 
@@ -65,7 +65,7 @@ func (r *PurchaseRepository) GetPurchaseSummary(ctx context.Context, req Purchas
 		); err != nil {
 			err = fmt.Errorf("failed to scan GetPurchaseSummary result: %w", err)
 			logger.Error(err, caller)
-			return nil, err
+			return nil, domain.ErrInternalError
 		}
 		summaries = append(summaries, summary)
 	}

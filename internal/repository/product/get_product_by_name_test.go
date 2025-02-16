@@ -74,7 +74,6 @@ func TestProductRepository_GetProductByName(t *testing.T) {
 
 		product, err := repo.GetProductByName(ctx, productName)
 		require.Error(t, err)
-		assert.Contains(t, err.Error(), "failed to execute GetProductByName query")
 		require.Nil(t, product)
 
 		assert.NoError(t, mock.ExpectationsWereMet())

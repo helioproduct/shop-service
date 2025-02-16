@@ -66,7 +66,6 @@ func TestPurchaseRepository_GetPurchaseSummary(t *testing.T) {
 		results, err := repo.GetPurchaseSummary(ctx, req)
 		require.Error(t, err)
 		assert.Nil(t, results)
-		assert.Contains(t, err.Error(), "failed to execute GetPurchaseSummary query")
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
@@ -86,7 +85,6 @@ func TestPurchaseRepository_GetPurchaseSummary(t *testing.T) {
 		results, err := repo.GetPurchaseSummary(ctx, req)
 		require.Error(t, err)
 		assert.Nil(t, results)
-		assert.Contains(t, err.Error(), "failed to scan GetPurchaseSummary result")
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})

@@ -21,7 +21,7 @@ func (r *TransferRepository) CreateTransfer(ctx context.Context, transfer domain
 	if err != nil {
 		err = fmt.Errorf("failed to build CreateTransfer query: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInternalError
 	}
 
 	var createdTransfer domain.Transfer
@@ -30,7 +30,7 @@ func (r *TransferRepository) CreateTransfer(ctx context.Context, transfer domain
 		Scan(&createdTransfer.ID, &createdTransfer.Time); err != nil {
 		err = fmt.Errorf("failed to execute CreateTransfer query: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInternalError
 	}
 
 	createdTransfer.From = transfer.From

@@ -63,7 +63,6 @@ func TestPurchaseRepository_CreatePurchase(t *testing.T) {
 		result, err := repo.CreatePurchase(ctx, req)
 		require.Error(t, err)
 		assert.Nil(t, result)
-		assert.Contains(t, err.Error(), "failed to execute CreatePurchase query")
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})

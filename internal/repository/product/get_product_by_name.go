@@ -21,7 +21,7 @@ func (repo *ProductRepository) GetProductByName(ctx context.Context, name string
 	if err != nil {
 		err = fmt.Errorf("failed to build GetProductByName query: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInternalError
 	}
 
 	var product domain.Product
@@ -33,7 +33,7 @@ func (repo *ProductRepository) GetProductByName(ctx context.Context, name string
 		}
 		err = fmt.Errorf("failed to execute GetProductByName query: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInternalError
 	}
 
 	return &product, nil

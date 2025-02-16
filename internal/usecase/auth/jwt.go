@@ -48,5 +48,7 @@ func (uc *AuthUsecase) parseJWT(tokenString string) (*Claims, error) {
 		return nil, domain.ErrInvalidToken
 	}
 
+	logger.Log.Println(claims)
+
 	return claims, nil
 }

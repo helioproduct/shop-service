@@ -112,7 +112,6 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 		results, err := repo.GetTransfers(ctx, filter)
 		require.Error(t, err)
 		assert.Nil(t, results)
-		assert.Contains(t, err.Error(), "failed to execute GetTransfers query")
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
@@ -130,7 +129,6 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 		results, err := repo.GetTransfers(ctx, filter)
 		require.Error(t, err)
 		assert.Nil(t, results)
-		assert.Contains(t, err.Error(), "failed to scan GetTransfers result")
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})

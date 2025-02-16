@@ -7,9 +7,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPasswordHashingAndChecking(t *testing.T) {
-	password := "supersecret"
-	hashedPassword := hasher.HashPassword(password)
-	assert.True(t, hasher.HashAndCompare(password, hashedPassword), "Correct password should match")
-	assert.False(t, hasher.HashAndCompare("wrongpassword", hashedPassword), "Wrong password should not match")
+func TestHashPassword(t *testing.T) {
+	password := "mypassword"
+	hash, err := hasher.HashPassword(password)
+	assert.NoError(t, err)
+	assert.NotEmpty(t, hash)
+
+	assert.True(t, hasher.CompareHashedPassword(hash, password), "Пароль должен совпадать")
+	assert.False(t, hasher.CompareHashedPassword(hash, "wrongpassword"), "Неверный пароль должен не совпадать")
 }

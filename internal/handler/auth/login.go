@@ -27,7 +27,8 @@ func (h *AuthHandlers) Login(c *fiber.Ctx) error {
 	session, err := h.authUC.Login(c.Context(), req.mapLoginRequest())
 	if err != nil {
 		logger.Error(err, caller)
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "invalid credentials"})
+
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(AuthResponse{Token: session.Token})

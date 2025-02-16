@@ -1,21 +1,27 @@
 package hasher
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"errors"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 var (
-	ErrHashingPassword = errors.New("failed to hash password")
+	ErrHashingPassword  = errors.New("failed to hash password")
+	ErrPasswordMismatch = errors.New("password does not match")
 )
 
-func HashPassword(password string) string {
-	hasher := sha256.New()
-	hasher.Write([]byte(password))
-	return hex.EncodeToString(hasher.Sum(nil))
+// HashPassword — Хеширует пароль через bcrypt
+func HashPassword(password string) (string, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", ErrHashingPassword
+	}
+	return string(hashedPassword), nil
 }
 
-func HashAndCompare(password, hashedPassword string) bool {
-	return HashPassword(password) == hashedPassword
+// CompareHashedPassword — Сравнивает хеш и пароль
+func CompareHashedPassword(hashedPassword, password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+	return err == nil
 }

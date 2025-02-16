@@ -65,7 +65,6 @@ func TestTransferRepository_CreateTransfer(t *testing.T) {
 		result, err := repo.CreateTransfer(ctx, transfer)
 		require.Error(t, err)
 		assert.Nil(t, result)
-		assert.Contains(t, err.Error(), "failed to execute CreateTransfer query")
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
@@ -85,7 +84,6 @@ func TestTransferRepository_CreateTransfer(t *testing.T) {
 		result, err := repo.CreateTransfer(ctx, transfer)
 		require.Error(t, err)
 		assert.Nil(t, result)
-		assert.Contains(t, err.Error(), "failed to execute CreateTransfer query")
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
@@ -105,7 +103,6 @@ func TestTransferRepository_CreateTransfer(t *testing.T) {
 		result, err := repo.CreateTransfer(ctx, transfer)
 		require.Error(t, err)
 		assert.Nil(t, result)
-		assert.Contains(t, err.Error(), "failed to execute CreateTransfer query")
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})

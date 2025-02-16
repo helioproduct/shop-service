@@ -51,7 +51,6 @@ func TestTransferRepository_GetSentCoinsSummary(t *testing.T) {
 		results, err := repo.GetSentCoinsSummary(ctx, fromUsername)
 		require.Error(t, err)
 		assert.Nil(t, results)
-		assert.Contains(t, err.Error(), "failed to execute GetSentCoinsSummary query")
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
@@ -64,7 +63,6 @@ func TestTransferRepository_GetSentCoinsSummary(t *testing.T) {
 		results, err := repo.GetSentCoinsSummary(ctx, fromUsername)
 		require.Error(t, err)
 		assert.Nil(t, results)
-		assert.Contains(t, err.Error(), "failed to scan GetSentCoinsSummary result")
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
@@ -121,7 +119,6 @@ func TestTransferRepository_GetReceivedCoinsSummary(t *testing.T) {
 		results, err := repo.GetReceivedCoinsSummary(ctx, toUsername)
 		require.Error(t, err)
 		assert.Nil(t, results)
-		assert.Contains(t, err.Error(), "failed to execute GetReceivedCoinsSummary query")
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
@@ -134,7 +131,6 @@ func TestTransferRepository_GetReceivedCoinsSummary(t *testing.T) {
 		results, err := repo.GetReceivedCoinsSummary(ctx, toUsername)
 		require.Error(t, err)
 		assert.Nil(t, results)
-		assert.Contains(t, err.Error(), "failed to scan GetReceivedCoinsSummary result")
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})

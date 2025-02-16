@@ -3,6 +3,7 @@ package transfer
 import (
 	"context"
 	"fmt"
+	"shop-service/internal/domain"
 	"shop-service/pkg/logger"
 
 	sq "github.com/Masterminds/squirrel"
@@ -33,7 +34,7 @@ func (r *TransferRepository) GetSentCoinsSummary(ctx context.Context, fromUserna
 	if err != nil {
 		err = fmt.Errorf("failed to build GetSentCoinsSummary query: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInternalError
 	}
 
 	trOrDB := r.txGetter.DefaultTrOrDB(ctx, r.db)
@@ -41,7 +42,7 @@ func (r *TransferRepository) GetSentCoinsSummary(ctx context.Context, fromUserna
 	if err != nil {
 		err = fmt.Errorf("failed to execute GetSentCoinsSummary query: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInternalError
 	}
 	defer rows.Close()
 
@@ -49,7 +50,9 @@ func (r *TransferRepository) GetSentCoinsSummary(ctx context.Context, fromUserna
 	for rows.Next() {
 		summary := new(SentCoinsSummary)
 		if err := rows.Scan(&summary.ToUsername, &summary.TotalSent); err != nil {
-			return nil, fmt.Errorf("failed to scan GetSentCoinsSummary result: %w", err)
+			err = fmt.Errorf("failed to scan GetSentCoinsSummary result: %w", err)
+			logger.Error(err, caller)
+			return nil, domain.ErrInternalError
 		}
 		summaries = append(summaries, summary)
 	}
@@ -72,13 +75,15 @@ func (r *TransferRepository) GetReceivedCoinsSummary(ctx context.Context, toUser
 	if err != nil {
 		err = fmt.Errorf("failed to build GetReceivedCoinsSummary query: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInternalError
 	}
 
 	trOrDB := r.txGetter.DefaultTrOrDB(ctx, r.db)
 	rows, err := trOrDB.QueryContext(ctx, query, args...)
 	if err != nil {
-		return nil, fmt.Errorf("failed to execute GetReceivedCoinsSummary query: %w", err)
+		err = fmt.Errorf("failed to execute GetReceivedCoinsSummary query: %w", err)
+		logger.Error(err, caller)
+		return nil, domain.ErrInternalError
 	}
 	defer rows.Close()
 
@@ -86,7 +91,9 @@ func (r *TransferRepository) GetReceivedCoinsSummary(ctx context.Context, toUser
 	for rows.Next() {
 		summary := new(ReceivedCoinsSummary)
 		if err := rows.Scan(&summary.FromUsername, &summary.TotalReceived); err != nil {
-			return nil, fmt.Errorf("failed to scan GetReceivedCoinsSummary result: %w", err)
+			err = fmt.Errorf("failed to scan GetReceivedCoinsSummary result: %w", err)
+			logger.Error(err, caller)
+			return nil, domain.ErrInternalError
 		}
 		summaries = append(summaries, summary)
 	}

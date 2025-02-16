@@ -15,7 +15,7 @@ func InitLogger() {
 		With().
 		Timestamp().
 		Logger().
-		Level(zerolog.InfoLevel)
+		Level(zerolog.DebugLevel)
 }
 
 func Error(err error, caller string) {
