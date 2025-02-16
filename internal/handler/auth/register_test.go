@@ -62,6 +62,7 @@ func TestRegisterHandler(t *testing.T) {
 		require.NoError(t, err)
 		defer resp.Body.Close()
 
+		//nolint:errcheck
 		io.ReadAll(resp.Body)
 		assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
 	})
@@ -83,7 +84,7 @@ func TestRegisterHandler(t *testing.T) {
 		resp, err := app.Test(req)
 		require.NoError(t, err)
 		defer resp.Body.Close()
-
+		//nolint:errcheck
 		io.ReadAll(resp.Body)
 		assert.Equal(t, http.StatusInternalServerError, resp.StatusCode)
 	})
