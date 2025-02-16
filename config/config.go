@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"shop-service/pkg/logger"
 
 	"gopkg.in/yaml.v3"
 )
@@ -26,6 +27,7 @@ func LoadConfig() (*Config, error) {
 	if env == "" {
 		env = "local"
 	}
+	logger.Log.Debug().Str("env", env).Send()
 
 	configFile := fmt.Sprintf("./config/%s.yaml", env)
 

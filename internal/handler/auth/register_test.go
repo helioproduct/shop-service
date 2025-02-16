@@ -44,7 +44,7 @@ func TestRegisterHandler(t *testing.T) {
 		defer resp.Body.Close()
 
 		body, _ := io.ReadAll(resp.Body)
-		assert.Equal(t, http.StatusCreated, resp.StatusCode)
+		assert.Equal(t, http.StatusOK, resp.StatusCode)
 
 		var responseBody map[string]string
 		err = json.Unmarshal(body, &responseBody)

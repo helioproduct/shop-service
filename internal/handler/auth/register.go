@@ -35,7 +35,7 @@ func (h *AuthHandlers) Register(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(AuthResponse{Token: session.Token})
+	return c.Status(fiber.StatusOK).JSON(AuthResponse{Token: session.Token})
 }
 
 func (r *RegisterRequest) Validate() error {

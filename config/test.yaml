@@ -1,0 +1,17 @@
+postgres:
+  host: "shop-postgres-test"
+  port: 5432
+  user: "postgres"
+  password: "password"
+  dbname: "shop"
+  sslmode: "disable"
+
+jwt:
+  secret: "my_jwt_secret"
+  expiration_hours: 24
+
+server:
+  port: "8080"
+
+
+
