@@ -50,7 +50,7 @@ func main() {
 	time.Sleep(3 * time.Second)
 	start := time.Now()
 
-	coins, err := transferUC.GetReceivedCoinsHistory(context.Background(), "alice")
+	coins, err := transferUC.GetReceivedCoinsSummary(context.Background(), "alice")
 	// err = transferUC.SendCoins(context.Background(), req)
 
 	if err != nil {
