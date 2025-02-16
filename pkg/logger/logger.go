@@ -1,7 +1,6 @@
 package logger
 
 import (
-	"fmt"
 	"os"
 	"time"
 
@@ -69,6 +68,6 @@ func Debug(caller string, msg string, fields map[string]interface{}) {
 	event.Msg(msg)
 }
 
-func Print(caller string, arg interface{}) {
-	fmt.Printf("[caller: %s] %v\n", caller, arg)
+func Print(caller string, key, value string) {
+	Log.Info().Str(key, value).Send()
 }

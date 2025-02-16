@@ -5,6 +5,7 @@ import "errors"
 // Users
 var (
 	ErrUserNotFound = errors.New("user not found")
+	ErrUserExists   = errors.New("user already exists")
 )
 
 // Products
