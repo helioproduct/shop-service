@@ -12,7 +12,7 @@ import (
 type (
 	PurchaseRepository interface {
 		CreatePurchase(ctx context.Context, req purchaseRepository.CreatePurchaseRequest) (*domain.Purchase, error)
-		GetPurchaseSummary(ctx context.Context, req purchaseRepository.PurchaseSummaryRequest)
+		GetPurchaseSummary(ctx context.Context, req purchaseRepository.PurchaseSummaryRequest) ([]*purchaseRepository.PurchaseSummary, error)
 	}
 
 	UserRepository interface {

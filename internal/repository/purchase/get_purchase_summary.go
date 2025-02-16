@@ -19,7 +19,7 @@ type PurchaseSummaryRequest struct {
 	Offset uint64
 }
 
-func (r *PurchaseRepository) GetPurchaseSummary(ctx context.Context, req PurchaseSummaryRequest) ([]PurchaseSummary, error) {
+func (r *PurchaseRepository) GetPurchaseSummary(ctx context.Context, req PurchaseSummaryRequest) ([]*PurchaseSummary, error) {
 	// caller := "PurchaseRepository.GetPurchaseSummary"
 
 	queryBuilder := sq.Select(
@@ -49,9 +49,10 @@ func (r *PurchaseRepository) GetPurchaseSummary(ctx context.Context, req Purchas
 	}
 	defer rows.Close()
 
-	var summaries []PurchaseSummary
+	var summaries []*PurchaseSummary
 	for rows.Next() {
-		var summary PurchaseSummary
+		summary := new(PurchaseSummary)
+		// var summary *PurchaseSummary
 		if err := rows.Scan(
 			&summary.Product.ID,
 			&summary.Product.Name,
