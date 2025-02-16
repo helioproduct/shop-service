@@ -23,8 +23,7 @@ func TestUserUsecase_GetBalance(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
 		expectedBalance := uint64(150)
 
-		mockUserRepo.EXPECT().
-			GetUserByUsername(ctx, username).
+		mockUserRepo.On("GetUserByUsername", ctx, username).
 			Return(&domain.User{
 				Username: username,
 				Balance:  expectedBalance,
@@ -34,22 +33,24 @@ func TestUserUsecase_GetBalance(t *testing.T) {
 		balance, err := uc.GetBalance(ctx, username)
 		require.NoError(t, err)
 		assert.Equal(t, expectedBalance, balance)
+
+		mockUserRepo.AssertExpectations(t)
 	})
 
 	t.Run("User Not Found", func(t *testing.T) {
-		mockUserRepo.EXPECT().
-			GetUserByUsername(ctx, username).
+		mockUserRepo.On("GetUserByUsername", ctx, username).
 			Return(nil, domain.ErrUserNotFound).
 			Once()
 
 		balance, err := uc.GetBalance(ctx, username)
 		require.ErrorIs(t, err, domain.ErrUserNotFound)
 		assert.Equal(t, uint64(0), balance)
+
+		mockUserRepo.AssertExpectations(t)
 	})
 
 	t.Run("Repository Error", func(t *testing.T) {
-		mockUserRepo.EXPECT().
-			GetUserByUsername(ctx, username).
+		mockUserRepo.On("GetUserByUsername", ctx, username).
 			Return(nil, errors.New("database error")).
 			Once()
 
@@ -57,5 +58,7 @@ func TestUserUsecase_GetBalance(t *testing.T) {
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "database error")
 		assert.Equal(t, uint64(0), balance)
+
+		mockUserRepo.AssertExpectations(t)
 	})
 }

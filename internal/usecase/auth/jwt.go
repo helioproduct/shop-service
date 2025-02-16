@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"shop-service/config"
 	"shop-service/internal/domain"
 	"shop-service/pkg/logger"
 	"time"
@@ -8,14 +9,16 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+var GenerateJWT = generateJWT
+
 type Claims struct {
 	UserID   domain.UserID `json:"user_id"`
 	Username string        `json:"username"`
 	jwt.RegisteredClaims
 }
 
-func (uc *AuthUsecase) generateJWT(user *domain.User) (string, error) {
-	expirationTime := time.Now().Add(time.Duration(uc.cfg.JWTConfig.ExpirationHours) * time.Hour)
+func generateJWT(cfg *config.Config, user *domain.User) (string, error) {
+	expirationTime := time.Now().Add(time.Duration(cfg.JWTConfig.ExpirationHours) * time.Hour)
 
 	claims := &Claims{
 		UserID:   user.ID,
@@ -27,7 +30,7 @@ func (uc *AuthUsecase) generateJWT(user *domain.User) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(uc.cfg.JWTConfig.Secret))
+	return token.SignedString([]byte(cfg.JWTConfig.Secret))
 }
 
 func (uc *AuthUsecase) parseJWT(tokenString string) (*Claims, error) {

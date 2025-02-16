@@ -19,6 +19,9 @@ type (
 	UserRepository interface {
 		GetUserByUsername(ctx context.Context, username string) (*domain.User, error)
 		UpdateUser(ctx context.Context, req user.UpdateUserRequest) error
+		GetUserHashedPassword(ctx context.Context, username string) (string, error)
+		GetUserByID(ctx context.Context, userID domain.UserID) (*domain.User, error)
+		CreateUser(ctx context.Context, req user.CreateUserRequest) (*domain.User, error)
 	}
 )
 

@@ -8,15 +8,17 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type JWTConfig struct {
+	Secret          string `yaml:"secret"`
+	ExpirationHours int    `yaml:"expiration_hours"`
+}
+
 type Config struct {
 	PostgresConfig `yaml:"postgres"`
+	JWTConfig      `yaml:"jwt"`
 	ServerConfig   struct {
 		Port string `yaml:"port"`
 	} `yaml:"server"`
-	JWTConfig struct {
-		Secret          string `yaml:"secret"`
-		ExpirationHours int    `yaml:"expiration_hours"`
-	} `yaml:"jwt"`
 }
 
 func LoadConfig() (*Config, error) {

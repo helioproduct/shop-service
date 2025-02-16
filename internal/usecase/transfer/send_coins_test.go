@@ -40,15 +40,13 @@ func TestTransferUsecase_SendCoins_WithTransaction(t *testing.T) {
 		}).
 		Times(1)
 
-	mockUserRepo.EXPECT().
-		GetUserByUsername(ctx, "alice").
+	mockUserRepo.On("GetUserByUsername", ctx, "alice").
 		Return(alice, nil).
-		Times(1)
+		Once()
 
-	mockUserRepo.EXPECT().
-		GetUserByUsername(ctx, "bob").
+	mockUserRepo.On("GetUserByUsername", ctx, "bob").
 		Return(bob, nil).
-		Times(1)
+		Once()
 
 	err := uc.SendCoins(context.Background(), req)
 	require.ErrorIs(t, err, domain.ErrInsufficientBalance)
@@ -85,8 +83,15 @@ func TestTransferUsecase_SendCoins(t *testing.T) {
 	t.Run("InsufficientBalance", func(t *testing.T) {
 		lowBalanceUser := &domain.User{ID: 1, Username: "alice", Balance: 100}
 
-		mockUserRepo.EXPECT().GetUserByUsername(ctx, "alice").Return(lowBalanceUser, nil).Times(1)
-		mockUserRepo.EXPECT().GetUserByUsername(ctx, "bob").Return(bob, nil).Times(1)
+		mockUserRepo.On("GetUserByUsername", ctx, "alice").
+			Return(lowBalanceUser, nil).
+			Once()
+
+		mockUserRepo.On("GetUserByUsername", ctx, "bob").
+			Return(bob, nil).
+			Once()
+		// mockUserRepo.EXPECT().GetUserByUsername(ctx, "alice").Return(lowBalanceUser, nil).Times(1)
+		// mockUserRepo.EXPECT().GetUserByUsername(ctx, "bob").Return(bob, nil).Times(1)
 
 		err := uc.SendCoins(ctx, req)
 		require.ErrorIs(t, err, domain.ErrInsufficientBalance)

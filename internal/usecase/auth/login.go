@@ -27,7 +27,7 @@ func (uc *AuthUsecase) Login(ctx context.Context, req LoginRequest) (*domain.Ses
 		return nil, domain.ErrInvalidCredentials
 	}
 
-	token, err := uc.generateJWT(&domain.User{Username: req.Username})
+	token, err := generateJWT(uc.cfg, &domain.User{Username: req.Username})
 	if err != nil {
 		err = fmt.Errorf("failed to generate token: %w", err)
 		logger.Error(err, caller)

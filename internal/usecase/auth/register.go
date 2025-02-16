@@ -31,7 +31,7 @@ func (uc *AuthUsecase) Register(ctx context.Context, req RegisterRequest) (*doma
 		return nil, err
 	}
 
-	token, err := uc.generateJWT(user)
+	token, err := generateJWT(uc.cfg, user)
 	if err != nil {
 		err = fmt.Errorf("failed to generate token: %w", err)
 		logger.Error(err, caller)

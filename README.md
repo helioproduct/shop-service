@@ -73,5 +73,5 @@ docker-compose up --build
 
 
 ## 🧪 Покрытие тестами
-✅ **Unit-тесты**: repository, usecase, handlers  
+✅ **Unit-тесты**: repository (77%), usecase (44%), handlers (77.6%)  
 ✅ **Интеграционные тесты**: ...
