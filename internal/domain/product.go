@@ -4,6 +4,7 @@ package domain
 // поэтому в качестве id используется uint64
 type ProductID uint64
 
+// возможно стоило разбить на Item + Price
 type Product struct {
 	ID    ProductID
 	Name  string

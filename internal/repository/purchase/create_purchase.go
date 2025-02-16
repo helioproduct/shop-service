@@ -12,7 +12,7 @@ import (
 type CreatePurchaseRequest struct {
 	UserID    domain.UserID
 	ProductID domain.ProductID
-	Quantity  int
+	Quantity  uint64
 }
 
 func (r *PurchaseRepository) CreatePurchase(ctx context.Context, req CreatePurchaseRequest) (*domain.Purchase, error) {
