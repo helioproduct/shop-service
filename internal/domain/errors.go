@@ -8,8 +8,10 @@ var (
 
 // Users
 var (
-	ErrUserNotFound = errors.New("user not found")
-	ErrUserExists   = errors.New("user already exists")
+	ErrPasswordRequired = errors.New("password required")
+	ErrUsernameRequired = errors.New("username required")
+	ErrUserNotFound     = errors.New("user not found")
+	ErrUserExists       = errors.New("user already exists")
 )
 
 // Products

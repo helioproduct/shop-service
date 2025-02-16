@@ -9,17 +9,18 @@ require (
 	github.com/avito-tech/go-transaction-manager/trm/v2 v2.0.0-rc9.2
 	github.com/gofiber/fiber/v2 v2.52.6
 	github.com/golang-jwt/jwt/v5 v5.2.1
+	github.com/golang/mock v1.6.0
 	github.com/lib/pq v1.10.9
 	github.com/rs/zerolog v1.33.0
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/crypto v0.31.0
+	gopkg.in/go-playground/assert.v1 v1.2.1
 	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/golang/mock v1.6.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/klauspost/compress v1.17.9 // indirect
 	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect
@@ -37,5 +38,4 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
-	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 )

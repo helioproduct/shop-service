@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 
+	"shop-service/internal/domain"
 	authUsecase "shop-service/internal/usecase/auth"
 	"shop-service/pkg/logger"
 )
@@ -41,10 +42,10 @@ func (h *AuthHandlers) Login(c *fiber.Ctx) error {
 
 func (r *LoginRequest) Validate() error {
 	if r.Username == "" {
-		return fiber.NewError(fiber.StatusBadRequest, "username required")
+		return domain.ErrUsernameRequired
 	}
 	if r.Password == "" {
-		return fiber.NewError(fiber.StatusBadRequest, "password required")
+		return domain.ErrPasswordRequired
 	}
 
 	return nil

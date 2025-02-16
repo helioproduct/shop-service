@@ -38,11 +38,9 @@ func (h *Handler) HandleTransfer(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(ErrorResponse{"invalid request"})
 	}
 
-	logger.Info(caller, "Attempting to transfer coins", map[string]interface{}{
-		"from_user": session.Username,
-		"to_user":   req.ToUsername,
-		"amount":    req.Amount,
-	})
+	if err := req.Validate(); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(ErrorResponse{"invalid request"})
+	}
 
 	err := h.transferUsecase.SendCoins(c.Context(), req.mapTransferRequest(session))
 	if err != nil {
@@ -60,6 +58,18 @@ func (h *Handler) HandleTransfer(c *fiber.Ctx) error {
 		Message: "Transfer completed successfully",
 		Balance: balance,
 	})
+}
+
+func (r *TransferRequest) Validate() error {
+	if r.ToUsername == "" {
+		return domain.ErrUsernameRequired
+	}
+
+	if r.Amount == 0 {
+		return domain.ErrZeroAmount
+	}
+
+	return nil
 }
 
 func (req *TransferRequest) mapTransferRequest(session *domain.Session) transferUsecase.SendCoinsRequest {
