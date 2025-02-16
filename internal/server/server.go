@@ -13,6 +13,7 @@ import (
 	authHandlers "shop-service/internal/handler/auth"
 	infoHandlers "shop-service/internal/handler/info"
 	purchaseHandlers "shop-service/internal/handler/purchase"
+	transferHanlders "shop-service/internal/handler/transfer"
 	middleware "shop-service/internal/middleware"
 	productRepository "shop-service/internal/repository/product"
 	purchaseRepository "shop-service/internal/repository/purchase"
@@ -68,6 +69,7 @@ func (s *Server) Initialize() error {
 	authHandler := authHandlers.NewAuthHandlers(authUC)
 	infoHandler := infoHandlers.NewInfoHandler(purchaseUC, transferUC, userUC)
 	purchaseHandler := purchaseHandlers.NewPurchaseHandler(purchaseUC, userUC)
+	transferHandler := transferHanlders.NewTransferHandler(transferUC, userUC)
 
 	s.app = fiber.New()
 	s.app.Use(middleware.ZerologMiddleware())
@@ -84,6 +86,7 @@ func (s *Server) Initialize() error {
 	})
 	api.Get("/info", infoHandler.HandleInfo)
 	api.Get("/buy/:item", purchaseHandler.HandlePurchase)
+	api.Post("/transfer", transferHandler.HandleTransfer)
 
 	return nil
 }
