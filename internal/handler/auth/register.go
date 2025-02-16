@@ -17,7 +17,14 @@ func (h *AuthHandlers) Register(c *fiber.Ctx) error {
 
 	var req RegisterRequest
 	if err := c.BodyParser(&req); err != nil {
+		logger.Error(err, caller)
+
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid request"})
+	}
+
+	if err := req.Validate(); err != nil {
+		logger.Error(err, caller)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	session, err := h.authUC.Register(c.Context(), req.mapRegisterRequest())
@@ -27,6 +34,13 @@ func (h *AuthHandlers) Register(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(AuthResponse{Token: session.Token})
+}
+
+func (r *RegisterRequest) Validate() error {
+	if r.Username == "" || r.Password == "" {
+		return fiber.NewError(fiber.StatusBadRequest, "username and password are required")
+	}
+	return nil
 }
 
 func (r *RegisterRequest) mapRegisterRequest() authUsecase.RegisterRequest {

@@ -37,4 +37,5 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
+	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 )

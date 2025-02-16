@@ -24,6 +24,11 @@ func (h *AuthHandlers) Login(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid request body"})
 	}
 
+	if err := req.Validate(); err != nil {
+		logger.Error(err, caller)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
 	session, err := h.authUC.Login(c.Context(), req.mapLoginRequest())
 	if err != nil {
 		logger.Error(err, caller)
@@ -32,6 +37,13 @@ func (h *AuthHandlers) Login(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(AuthResponse{Token: session.Token})
+}
+
+func (r *LoginRequest) Validate() error {
+	if r.Username == "" || r.Password == "" {
+		return fiber.NewError(fiber.StatusBadRequest, "username and password are required")
+	}
+	return nil
 }
 
 func (r *LoginRequest) mapLoginRequest() authUsecase.LoginRequest {

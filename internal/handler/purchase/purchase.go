@@ -12,7 +12,7 @@ import (
 
 type BuyItemRequest struct {
 	ProductName string `json:"productName" validate:"required"`
-	Quantity    uint64 `json:"quantity" validate:"required,min=1"`
+	// Quantity    uint64 `json:"quantity" validate:"required,min=1"`
 }
 
 type BuyItemResponse struct {
@@ -40,7 +40,6 @@ func (h *Handler) HandlePurchase(c *fiber.Ctx) error {
 
 	req := BuyItemRequest{
 		ProductName: item,
-		Quantity:    1,
 	}
 
 	err := h.purchaseUsecase.BuyItemByName(c.Context(), req.mapBuyRequest(session))
@@ -65,6 +64,6 @@ func (req *BuyItemRequest) mapBuyRequest(session *domain.Session) purchaseUsecas
 	return purchaseUsecase.BuyItemRequest{
 		Username:    session.Username,
 		ProductName: req.ProductName,
-		Quantity:    req.Quantity,
+		Quantity:    1,
 	}
 }
