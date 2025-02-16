@@ -17,7 +17,7 @@ type ReceivedCoinsSummary struct {
 	TotalReceived uint64
 }
 
-func (r *TransferRepository) GetSentCoinsSummary(ctx context.Context, fromUsername string) ([]SentCoinsSummary, error) {
+func (r *TransferRepository) GetSentCoinsSummary(ctx context.Context, fromUsername string) ([]*SentCoinsSummary, error) {
 	// caller := "TransferRepository.GetSentCoinsSummary"
 
 	queryBuilder := sq.Select("tu.username AS to_username", "SUM(t.amount) AS total_sent").
@@ -40,9 +40,10 @@ func (r *TransferRepository) GetSentCoinsSummary(ctx context.Context, fromUserna
 	}
 	defer rows.Close()
 
-	var summaries []SentCoinsSummary
+	var summaries []*SentCoinsSummary
 	for rows.Next() {
-		var summary SentCoinsSummary
+		// var summary *SentCoinsSummary
+		summary := new(SentCoinsSummary)
 		if err := rows.Scan(&summary.ToUsername, &summary.TotalSent); err != nil {
 			return nil, fmt.Errorf("failed to scan GetSentCoinsSummary result: %w", err)
 		}
@@ -52,7 +53,7 @@ func (r *TransferRepository) GetSentCoinsSummary(ctx context.Context, fromUserna
 	return summaries, nil
 }
 
-func (r *TransferRepository) GetReceivedCoinsSummary(ctx context.Context, toUsername string) ([]ReceivedCoinsSummary, error) {
+func (r *TransferRepository) GetReceivedCoinsSummary(ctx context.Context, toUsername string) ([]*ReceivedCoinsSummary, error) {
 	// caller := "TransferRepository.GetReceivedCoinsSummary"
 
 	queryBuilder := sq.Select("fu.username AS from_username", "SUM(t.amount) AS total_received").
@@ -75,9 +76,10 @@ func (r *TransferRepository) GetReceivedCoinsSummary(ctx context.Context, toUser
 	}
 	defer rows.Close()
 
-	var summaries []ReceivedCoinsSummary
+	var summaries []*ReceivedCoinsSummary
 	for rows.Next() {
-		var summary ReceivedCoinsSummary
+		// var summary ReceivedCoinsSummary
+		summary := new(ReceivedCoinsSummary)
 		if err := rows.Scan(&summary.FromUsername, &summary.TotalReceived); err != nil {
 			return nil, fmt.Errorf("failed to scan GetReceivedCoinsSummary result: %w", err)
 		}
