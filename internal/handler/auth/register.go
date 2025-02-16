@@ -1,28 +1,33 @@
 package handlers
 
 import (
-	"encoding/json"
-	"net/http"
+	authUsecase "shop-service/internal/usecase/auth"
+
+	"github.com/gofiber/fiber/v2"
 )
 
-func (h *AuthHandlers) Register(w http.ResponseWriter, r *http.Request) {
-	var req AuthRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "invalid request body", http.StatusBadRequest)
-		return
+type RegisterRequest struct {
+	Username string `json:"username" validate:"required"`
+	Password string `json:"password" validate:"required"`
+}
+
+func (h *AuthHandlers) Register(c *fiber.Ctx) error {
+	var req RegisterRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid request"})
 	}
 
-	session, err := h.authUC.Register(r.Context(), req.Username, req.Password)
+	session, err := h.authUC.Register(c.Context(), req.mapRegisterRequest())
 	if err != nil {
-		http.Error(w, "failed to register user", http.StatusInternalServerError)
-		return
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "registration failed"})
 	}
 
-	resp := AuthResponse{
-		Token: session.Token,
-	}
+	return c.Status(fiber.StatusCreated).JSON(AuthResponse{Token: session.Token})
+}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(resp)
+func (r *RegisterRequest) mapRegisterRequest() authUsecase.RegisterRequest {
+	return authUsecase.RegisterRequest{
+		Username: r.Username,
+		Password: r.Password,
+	}
 }
