@@ -40,9 +40,13 @@ func (h *AuthHandlers) Login(c *fiber.Ctx) error {
 }
 
 func (r *LoginRequest) Validate() error {
-	if r.Username == "" || r.Password == "" {
-		return fiber.NewError(fiber.StatusBadRequest, "username and password are required")
+	if r.Username == "" {
+		return fiber.NewError(fiber.StatusBadRequest, "username required")
 	}
+	if r.Password == "" {
+		return fiber.NewError(fiber.StatusBadRequest, "password required")
+	}
+
 	return nil
 }
 
