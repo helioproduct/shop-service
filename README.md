@@ -1,7 +1,7 @@
 # shop-service
 
 
-### 📌 1. Запуск через Docker Compose:
+### 1. Запуск через Docker Compose:
 ```bash
 docker-compose up --build
 ```
@@ -72,7 +72,7 @@ docker-compose up --build
 
 
 
-## 🧪 Покрытие тестами
+## Покрытие тестами
 ✅ **Unit-тесты**: repository (77%), usecase (44%) (не успел написать тесты с transaction manager mock), handlers (77.6%)  
 ✅ **Интеграционные тесты**: ...
 
