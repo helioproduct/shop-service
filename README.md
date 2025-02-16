@@ -1,9 +1,9 @@
 # shop-service
 
 
-### 1. Запуск через Docker Compose:
+### 1. Запуск:
 ```bash
-docker-compose up --build
+make up
 ```
 
 
@@ -74,8 +74,17 @@ docker-compose up --build
 
 ## Покрытие тестами
 ✅ **Unit-тесты**: repository (77%), usecase (44%) (не успел написать тесты с transaction manager mock), handlers (77.6%)  
-✅ **Интеграционные тесты**: ...
+✅ **Интеграционный тест**: покупка мерча
 
+
+
+### Интеграционные тесты:
+```bash
+make integration-test
+```
+
+
+docker compose  -f ./tests/integration/docker-compose.integration.yaml up -d 
 
 ### **Архитектура**  
 

@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     ports:
-      - "5433:5432"
+      - "5434:5432"
     volumes:
       - ../../migrations:/docker-entrypoint-initdb.d
     healthcheck:
@@ -24,24 +24,19 @@ services:
       dockerfile: Dockerfile
     environment:
       ENV: test
-      # DB_HOST: postgres
-      # DB_PORT: 5432
-      # DB_USER: testuser
-      # DB_PASSWORD: testpassword
-      # DB_NAME: shop_service_test
-      SERVER_PORT: 8080
+      SERVER_PORT: 8081
     ports:
       - "8080:8080"
     depends_on:
       shop-postgres-test:
         condition: service_healthy
 
-  # purchase-test:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   environment:
-  #     BASE_URL: http://app:8080
-  #   depends_on:
-  #     app:
-  #       condition: service_started
+  purchase-test:
+    build:
+      context: ../../
+      dockerfile: tests/integration/Dockerfile
+    environment:
+      BASE_URL: http://app:8080
+    depends_on:
+      app:
+        condition: service_started

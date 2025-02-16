@@ -99,8 +99,8 @@ func (s *Server) Run() error {
 	signal.Notify(shutdownChan, os.Interrupt, syscall.SIGTERM)
 
 	go func() {
-		logger.Log.Info().Msg("Starting Fiber server on port 8080...")
-		if err := s.app.Listen(":8080"); err != nil {
+		logger.Log.Info().Msg("Starting Fiber server on port" + s.cfg.ServerConfig.Port)
+		if err := s.app.Listen(s.cfg.ServerConfig.Port); err != nil {
 			logger.Log.Fatal().Err(err).Msg("Failed to start server")
 		}
 	}()

@@ -1,11 +1,12 @@
-FROM golang:1.21
+FROM golang:1.23
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+COPY . ./
+# COPY go.mod go.sum ./
 
 RUN go mod download
 
 COPY . .
 
-ENTRYPOINT ["go", "test", "-v", "./tests/integration/purchase"]
+ENTRYPOINT ["go", "test", "-v", "./tests/integration"]
