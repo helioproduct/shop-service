@@ -6,7 +6,7 @@ import (
 	purchaseRepository "shop-service/internal/repository/purchase"
 	userRepository "shop-service/internal/repository/user"
 
-	"github.com/avito-tech/go-transaction-manager/trm"
+	"github.com/avito-tech/go-transaction-manager/trm/v2"
 )
 
 type (
@@ -30,4 +30,18 @@ type PurchaseUsecase struct {
 	purchaseRepo PurchaseRepository
 	userRepo     UserRepository
 	productRepo  ProductRepository
+}
+
+func NewPurchaseUsecase(
+	trm trm.Manager,
+	purchaseRepo PurchaseRepository,
+	userRepo UserRepository,
+	productRepo ProductRepository,
+) *PurchaseUsecase {
+	return &PurchaseUsecase{
+		trm:          trm,
+		purchaseRepo: purchaseRepo,
+		userRepo:     userRepo,
+		productRepo:  productRepo,
+	}
 }

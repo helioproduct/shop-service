@@ -21,7 +21,6 @@ func NewAuthMiddleware(authUsecase AuthUsecase) *AuthMiddleware {
 	return &AuthMiddleware{authUsecase: authUsecase}
 }
 
-// Middleware для проверки JWT-токена
 func (m *AuthMiddleware) Handle() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		// Извлекаем токен из заголовка Authorization
@@ -38,7 +37,6 @@ func (m *AuthMiddleware) Handle() fiber.Handler {
 
 		token := parts[1]
 
-		// Создаем сессию из токена
 		session := &domain.Session{
 			Token: token,
 		}
@@ -51,15 +49,11 @@ func (m *AuthMiddleware) Handle() fiber.Handler {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "internal server error"})
 		}
 
-		// Добавляем сессию в контекст
 		c.Locals("session", session)
-
-		// Переходим к следующему обработчику
 		return c.Next()
 	}
 }
 
-// Получить сессию из контекста
 func GetSessionFromContext(c *fiber.Ctx) (*domain.Session, bool) {
 	session, ok := c.Locals("session").(*domain.Session)
 	return session, ok
