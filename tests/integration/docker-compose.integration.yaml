@@ -36,7 +36,7 @@ services:
       context: ../../
       dockerfile: tests/integration/Dockerfile
     environment:
-      BASE_URL: http://app:8080
+      BASE_URL: http://app:8081
     depends_on:
       app:
         condition: service_started

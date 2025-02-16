@@ -10,7 +10,7 @@ up:
 .PHONY: down
 down:
 	@echo "🛑 Остановка сервисов..."
-	@docker-compose down
+	@docker-compose down -v
 
 ### 3. Перезапуск с пересборкой
 .PHONY: restart
@@ -20,7 +20,7 @@ restart: down up
 integration-test:
 	@echo "Запуск интеграционных тестов..."
 	@$(DOCKER_COMPOSE) up --build --abort-on-container-exit
-	@$(DOCKER_COMPOSE) down
+	@$(DOCKER_COMPOSE) down -v
 
 
 .PHONY: clean

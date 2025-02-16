@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"os"
 	"shop-service/pkg/logger"
 	"testing"
 
@@ -12,11 +13,14 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-const (
+var (
 	baseURL = "http://localhost:8081"
 )
 
 func TestPurchaseFlow(t *testing.T) {
+
+	baseURL = os.Getenv("BASE_URL")
+
 	// 1. Регистрация пользователя
 	registerResp := makeRequest(t, "POST", "/auth/register", map[string]string{
 		"username": "testuser6",
