@@ -10,6 +10,12 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+type TotalTransfer struct {
+	FromUsername string
+	ToUsername   string
+	Amount       uint64
+}
+
 type GetTransfersFilter struct {
 	FromUsername *string
 	ToUsername   *string
@@ -33,17 +39,14 @@ func (r *TransferRepository) GetTransfers(ctx context.Context, filter GetTransfe
 		LeftJoin("users tu ON t.to_user_id = tu.id").
 		PlaceholderFormat(sq.Dollar)
 
-	// Фильтрация по FromUsername
 	if filter.FromUsername != nil {
 		queryBuilder = queryBuilder.Where(sq.Eq{"fu.username": *filter.FromUsername})
 	}
 
-	// Фильтрация по ToUsername
 	if filter.ToUsername != nil {
 		queryBuilder = queryBuilder.Where(sq.Eq{"tu.username": *filter.ToUsername})
 	}
 
-	// Пагинация
 	if filter.Limit > 0 {
 		queryBuilder = queryBuilder.Limit(filter.Limit)
 	}
@@ -51,7 +54,6 @@ func (r *TransferRepository) GetTransfers(ctx context.Context, filter GetTransfe
 		queryBuilder = queryBuilder.Offset(filter.Offset)
 	}
 
-	// Формируем SQL-запрос
 	query, args, err := queryBuilder.ToSql()
 	if err != nil {
 		err = fmt.Errorf("failed to build GetTransfers query: %w", err)
@@ -59,7 +61,6 @@ func (r *TransferRepository) GetTransfers(ctx context.Context, filter GetTransfe
 		return nil, err
 	}
 
-	// Выполняем запрос
 	trOrDB := r.txGetter.DefaultTrOrDB(ctx, r.db)
 	rows, err := trOrDB.QueryContext(ctx, query, args...)
 	if err != nil {
@@ -69,7 +70,6 @@ func (r *TransferRepository) GetTransfers(ctx context.Context, filter GetTransfe
 	}
 	defer rows.Close()
 
-	// Обрабатываем результат
 	var transfers []domain.Transfer
 	for rows.Next() {
 		var t domain.Transfer

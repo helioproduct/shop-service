@@ -9,10 +9,13 @@ import (
 	transferRepository "shop-service/internal/repository/transfer"
 	userRepository "shop-service/internal/repository/user"
 	transferUsecase "shop-service/internal/usecase/transfer"
+	"time"
 
 	trmsql "github.com/avito-tech/go-transaction-manager/drivers/sql/v2"
 	"github.com/avito-tech/go-transaction-manager/trm/v2/manager"
+
 	_ "github.com/lib/pq"
+	// _ "github.com/jackc/pgx/v5/stdlib"
 )
 
 func main() {
@@ -38,16 +41,23 @@ func main() {
 
 	transferUC := transferUsecase.NewTransferUsecase(trManager, transferRepo, userRepo)
 
-	req := transferUsecase.SendCoinsRequest{
-		From:   "bob",
-		To:     "alice",
-		Amount: 2500,
-	}
+	// req := transferUsecase.SendCoinsRequest{
+	// From:   "carol",
+	// To:     "alice",
+	// Amount: 1000,
+	// }
 
-	err = transferUC.SendCoins(context.Background(), req)
+	time.Sleep(3 * time.Second)
+	start := time.Now()
+
+	coins, err := transferUC.GetReceivedCoinsHistory(context.Background(), "alice")
+	// err = transferUC.SendCoins(context.Background(), req)
+
 	if err != nil {
 		log.Fatalf("failed to send coins: %v", err)
 	}
+	fmt.Println(time.Since(start))
 
-	fmt.Println("Coins transferred successfully.")
+	fmt.Println(coins)
+
 }

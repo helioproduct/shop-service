@@ -12,7 +12,8 @@ import (
 type (
 	TransferRepository interface {
 		CreateTransfer(ctx context.Context, transfer domain.Transfer) (*domain.Transfer, error)
-		GetTransfers(ctx context.Context, filter transfer.GetTransfersFilter) ([]domain.Transfer, error)
+		GetSentCoinsSummary(ctx context.Context, fromUsername string) ([]transfer.SentCoinsSummary, error)
+		GetReceivedCoinsSummary(ctx context.Context, toUsername string) ([]transfer.ReceivedCoinsSummary, error)
 	}
 
 	UserRepository interface {
