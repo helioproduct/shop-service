@@ -2,6 +2,10 @@ package domain
 
 import "errors"
 
+var (
+	ErrInternalError = errors.New("internal service error")
+)
+
 // Users
 var (
 	ErrUserNotFound = errors.New("user not found")
@@ -20,4 +24,11 @@ var (
 	ErrMissingFromUser     = errors.New("sender user ID must be specified")
 	ErrMissingToUser       = errors.New("recipient user ID must be specified")
 	ErrInsufficientBalance = errors.New("insufficient balance")
+)
+
+var (
+	ErrParsingToken         = errors.New("error parsing token")
+	ErrInvalidToken         = errors.New("invalid token")
+	ErrExpiredToken         = errors.New("token expired")
+	ErrTokenSessionMismatch = errors.New("session data mismatch")
 )

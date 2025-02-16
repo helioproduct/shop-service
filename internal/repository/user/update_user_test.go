@@ -88,7 +88,6 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 
 		err := repo.UpdateUser(ctx, req)
 		require.Error(t, err)
-		assert.Contains(t, err.Error(), "failed to execute UpdateUser query")
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
@@ -105,7 +104,6 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 
 		err := repo.UpdateUser(ctx, req)
 		require.Error(t, err)
-		assert.Contains(t, err.Error(), "failed to get affected rows")
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})

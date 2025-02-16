@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"shop-service/internal/domain"
 	"shop-service/pkg/logger"
 	"time"
@@ -39,16 +38,14 @@ func (uc *AuthUsecase) parseJWT(tokenString string) (*Claims, error) {
 	})
 
 	if err != nil {
-		err = fmt.Errorf("failed to parse token: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrParsingToken
 	}
 
 	claims, ok := token.Claims.(*Claims)
 	if !ok || !token.Valid {
-		err = fmt.Errorf("invalid token")
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInvalidToken
 	}
 
 	return claims, nil

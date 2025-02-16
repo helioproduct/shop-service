@@ -23,7 +23,7 @@ func Error(err error, caller string) {
 		Log.
 			Err(err).
 			Str("caller", caller).
-			Str("error", err.Error()).
+			// Str("error", err.Error()).
 			Send()
 	}
 }

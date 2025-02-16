@@ -18,9 +18,6 @@ func (uc *AuthUsecase) Login(ctx context.Context, req LoginRequest) (*domain.Ses
 	caller := "AuthUsecase.Login"
 
 	hashedPassword, err := uc.userRepo.GetUserHashedPassword(ctx, req.Username)
-
-	logger.Print(caller, "hashedpassowrd", hashedPassword)
-
 	if err != nil {
 		err = fmt.Errorf("failed to get user hashed password: %w", err)
 		logger.Error(err, caller)

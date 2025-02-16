@@ -22,7 +22,7 @@ func (r *UserRepository) GetUserByID(ctx context.Context, userID domain.UserID) 
 	if err != nil {
 		err = fmt.Errorf("failed to build GetUserByID query: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInternalError
 	}
 
 	var user domain.User
@@ -34,7 +34,7 @@ func (r *UserRepository) GetUserByID(ctx context.Context, userID domain.UserID) 
 		}
 		err = fmt.Errorf("failed to execute GetUserByID query: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInternalError
 	}
 	return &user, nil
 }

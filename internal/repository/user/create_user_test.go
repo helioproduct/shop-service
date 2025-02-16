@@ -61,7 +61,6 @@ func TestUserRepository_CreateUser(t *testing.T) {
 		user, err := repo.CreateUser(ctx, req)
 		assert.Error(t, err)
 		assert.Nil(t, user)
-		assert.Contains(t, err.Error(), "failed to insert user")
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
@@ -75,7 +74,6 @@ func TestUserRepository_CreateUser(t *testing.T) {
 		user, err := repo.CreateUser(ctx, req)
 		assert.Error(t, err)
 		assert.Nil(t, user)
-		assert.Contains(t, err.Error(), "failed to insert user")
 
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})

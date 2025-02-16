@@ -5,10 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"shop-service/internal/domain"
+	"shop-service/pkg/constant"
 	"shop-service/pkg/logger"
 
+	"github.com/lib/pq"
+
 	sq "github.com/Masterminds/squirrel"
-	"github.com/jackc/pgconn"
 )
 
 type CreateUserRequest struct {
@@ -29,7 +31,7 @@ func (r *UserRepository) CreateUser(ctx context.Context, req CreateUserRequest) 
 	if err != nil {
 		err = fmt.Errorf("failed to build CreateUser query: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInternalError
 	}
 
 	var user domain.User
@@ -37,18 +39,15 @@ func (r *UserRepository) CreateUser(ctx context.Context, req CreateUserRequest) 
 	if err := trOrDB.QueryRowContext(ctx, query, args...).
 		Scan(&user.ID, &user.Username, &user.Balance); err != nil {
 
-		var pgErr *pgconn.PgError
-		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
-			logger.Error(domain.ErrUserExists, caller)
-			logger.Print(caller, "here", "here2")
-			return nil, domain.ErrUserExists
+		var pqErr *pq.Error
+		if errors.As(err, &pqErr) {
+			if pqErr.Code == constant.PostgresUniqueViolationErr {
+				logger.Error(domain.ErrUserExists, caller)
+				return nil, domain.ErrUserExists
+			}
 		}
-
-		logger.Print(caller, "here", "here3")
-
-		err = fmt.Errorf("failed to insert user: %w", err)
 		logger.Error(err, caller)
-		return nil, err
+		return nil, domain.ErrInternalError
 	}
 
 	return &user, nil

@@ -30,14 +30,14 @@ func (uc *TransferUsecase) SendCoins(ctx context.Context, req SendCoinsRequest) 
 
 		sender, err := uc.userRepo.GetUserByUsername(ctx, req.From)
 		if err != nil {
-			err = fmt.Errorf("error getting sender: %w", err)
+			err = fmt.Errorf("error getting sender: %w", domain.ErrUserNotFound)
 			logger.Error(err, caller)
 			return err
 		}
 
 		recipient, err := uc.userRepo.GetUserByUsername(ctx, req.To)
 		if err != nil {
-			err = fmt.Errorf("error getting recipient: %w", err)
+			err = fmt.Errorf("error getting recipient: %w", domain.ErrUserNotFound)
 			logger.Error(err, caller)
 			return err
 		}

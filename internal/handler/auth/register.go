@@ -2,6 +2,7 @@ package handlers
 
 import (
 	authUsecase "shop-service/internal/usecase/auth"
+	"shop-service/pkg/logger"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -12,6 +13,8 @@ type RegisterRequest struct {
 }
 
 func (h *AuthHandlers) Register(c *fiber.Ctx) error {
+	caller := "AuthHandlers.Register"
+
 	var req RegisterRequest
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid request"})
@@ -19,7 +22,8 @@ func (h *AuthHandlers) Register(c *fiber.Ctx) error {
 
 	session, err := h.authUC.Register(c.Context(), req.mapRegisterRequest())
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "registration failed"})
+		logger.Error(err, caller)
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(AuthResponse{Token: session.Token})

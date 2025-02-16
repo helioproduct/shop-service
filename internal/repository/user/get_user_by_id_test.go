@@ -64,7 +64,6 @@ func TestUserRepository_GetUserByID(t *testing.T) {
 
 		user, err := repo.GetUserByID(ctx, userID)
 		require.Error(t, err)
-		assert.Contains(t, err.Error(), "failed to execute GetUserByID query")
 		require.Nil(t, user)
 
 		assert.NoError(t, mock.ExpectationsWereMet())

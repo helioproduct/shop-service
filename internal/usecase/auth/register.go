@@ -26,7 +26,6 @@ func (uc *AuthUsecase) Register(ctx context.Context, req RegisterRequest) (*doma
 
 	user, err := uc.userRepo.CreateUser(ctx, *createRequest)
 	if err != nil {
-		err = fmt.Errorf("failed to create user: %w", err)
 		logger.Error(err, caller)
 		return nil, err
 	}

@@ -72,7 +72,6 @@ func TestUserRepository_GetUserByUsername(t *testing.T) {
 		require.Error(t, err)
 		require.Nil(t, user)
 
-		assert.Contains(t, err.Error(), "failed to execute GetUserByUsername query")
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 }

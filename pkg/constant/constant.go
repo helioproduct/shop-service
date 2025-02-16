@@ -1,5 +1,7 @@
 package constant
 
+import "github.com/lib/pq"
+
 var (
-	PostgresUniqueConstraintCode = "23505"
+	PostgresUniqueViolationErr = pq.ErrorCode("23505")
 )

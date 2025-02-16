@@ -36,9 +36,9 @@ func (r *UserRepository) UpdateUser(ctx context.Context, req UpdateUserRequest) 
 
 	query, args, err := queryBuilder.ToSql()
 	if err != nil {
-		err = fmt.Errorf("failed to build UpdateUser query: %w", err)
+		err = fmt.Errorf("failed to build UpdateUser query")
 		logger.Error(err, caller)
-		return err
+		return domain.ErrInternalError
 	}
 
 	trOrDB := r.txGetter.DefaultTrOrDB(ctx, r.db)
@@ -46,14 +46,14 @@ func (r *UserRepository) UpdateUser(ctx context.Context, req UpdateUserRequest) 
 	if err != nil {
 		err = fmt.Errorf("failed to execute UpdateUser query: %w", err)
 		logger.Error(err, caller)
-		return err
+		return domain.ErrInternalError
 	}
 
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
 		err = fmt.Errorf("failed to get affected rows: %w", err)
 		logger.Error(err, caller)
-		return err
+		return domain.ErrInternalError
 	}
 	if rowsAffected == 0 {
 		return domain.ErrUserNotFound

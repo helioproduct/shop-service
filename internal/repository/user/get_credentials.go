@@ -22,7 +22,7 @@ func (repo *UserRepository) GetUserHashedPassword(ctx context.Context, username 
 	if err != nil {
 		err = fmt.Errorf("failed to build GetUserHashedPassword query: %w", err)
 		logger.Error(err, caller)
-		return "", err
+		return "", domain.ErrInternalError
 	}
 
 	var hashedPassword string
@@ -32,7 +32,7 @@ func (repo *UserRepository) GetUserHashedPassword(ctx context.Context, username 
 		}
 		err = fmt.Errorf("failed to execute GetUserHashedPassword query: %w", err)
 		logger.Error(err, caller)
-		return "", err
+		return "", domain.ErrInternalError
 	}
 
 	return hashedPassword, nil
