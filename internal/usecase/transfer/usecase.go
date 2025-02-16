@@ -4,6 +4,8 @@ import (
 	"context"
 	"shop-service/internal/domain"
 	"shop-service/internal/repository/transfer"
+
+	"github.com/avito-tech/go-transaction-manager/trm"
 )
 
 type (
@@ -18,11 +20,16 @@ type (
 )
 
 type TransferUsecase struct {
+	trm          trm.Manager
 	transferRepo TransferRepository
 	userRepo     UserRepository
 }
 
-func NewTransferRepository(transferRepo TransferRepository, userRepo UserRepository) *TransferUsecase {
+func NewTransferRepository(
+	trm trm.Manager,
+	transferRepo TransferRepository,
+	userRepo UserRepository,
+) *TransferUsecase {
 	return &TransferUsecase{
 		transferRepo: transferRepo,
 		userRepo:     userRepo,

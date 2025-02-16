@@ -11,6 +11,7 @@ require (
 )
 
 require (
+	github.com/avito-tech/go-transaction-manager v1.5.0 // indirect
 	github.com/avito-tech/go-transaction-manager/trm/v2 v2.0.0-rc9.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect
