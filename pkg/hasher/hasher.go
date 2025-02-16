@@ -11,7 +11,6 @@ var (
 	ErrPasswordMismatch = errors.New("password does not match")
 )
 
-// HashPassword — Хеширует пароль через bcrypt
 func HashPassword(password string) (string, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -20,7 +19,6 @@ func HashPassword(password string) (string, error) {
 	return string(hashedPassword), nil
 }
 
-// CompareHashedPassword — Сравнивает хеш и пароль
 func CompareHashedPassword(hashedPassword, password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 	return err == nil
