@@ -100,7 +100,7 @@ func (s *Server) Run() error {
 
 	go func() {
 		logger.Log.Info().Msg("Starting Fiber server on port" + s.cfg.ServerConfig.Port)
-		if err := s.app.Listen(s.cfg.ServerConfig.Port); err != nil {
+		if err := s.app.Listen(":" + s.cfg.ServerConfig.Port); err != nil {
 			logger.Log.Fatal().Err(err).Msg("Failed to start server")
 		}
 	}()

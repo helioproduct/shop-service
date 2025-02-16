@@ -26,7 +26,7 @@ services:
       ENV: test
       SERVER_PORT: 8081
     ports:
-      - "8080:8080"
+      - "8081:8081"
     depends_on:
       shop-postgres-test:
         condition: service_healthy
