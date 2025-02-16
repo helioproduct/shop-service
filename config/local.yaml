@@ -1,0 +1,13 @@
+postgres:
+  host: "localhost"
+  port: 54323
+  user: "postgres"
+  password: "password"
+  dbname: "shop"
+  sslmode: "disable"
+
+server:
+  port: 8080
+
+
+

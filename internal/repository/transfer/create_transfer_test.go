@@ -25,7 +25,7 @@ func TestTransferRepository_CreateTransfer(t *testing.T) {
 	repo := transfer.NewTransferRepository(db, trmsql.DefaultCtxGetter)
 
 	t.Run("Success", func(t *testing.T) {
-		transfer := &domain.Transfer{
+		transfer := domain.Transfer{
 			From:   1,
 			To:     2,
 			Amount: 100,
@@ -52,7 +52,7 @@ func TestTransferRepository_CreateTransfer(t *testing.T) {
 	})
 
 	t.Run("Database Error", func(t *testing.T) {
-		transfer := &domain.Transfer{
+		transfer := domain.Transfer{
 			From:   1,
 			To:     2,
 			Amount: 200,
@@ -71,7 +71,7 @@ func TestTransferRepository_CreateTransfer(t *testing.T) {
 	})
 
 	t.Run("Scan Error (недостаточно полей)", func(t *testing.T) {
-		transfer := &domain.Transfer{
+		transfer := domain.Transfer{
 			From:   3,
 			To:     4,
 			Amount: 300,
@@ -91,7 +91,7 @@ func TestTransferRepository_CreateTransfer(t *testing.T) {
 	})
 
 	t.Run("Scan Error (неверный тип)", func(t *testing.T) {
-		transfer := &domain.Transfer{
+		transfer := domain.Transfer{
 			From:   5,
 			To:     6,
 			Amount: 500,

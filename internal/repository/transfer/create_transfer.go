@@ -9,7 +9,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func (r *TransferRepository) CreateTransfer(ctx context.Context, transfer *domain.Transfer) (*domain.Transfer, error) {
+func (r *TransferRepository) CreateTransfer(ctx context.Context, transfer domain.Transfer) (*domain.Transfer, error) {
 	caller := "TransferRepository.CreateTransfer"
 
 	query, args, err := sq.Insert("transfers").
