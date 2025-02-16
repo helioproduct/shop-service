@@ -11,7 +11,7 @@ jwt:
   expiration_hours: 24
 
 server:
-  port: 8080
+  port: "8080"
 
 
 

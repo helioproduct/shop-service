@@ -6,8 +6,10 @@ import (
 	"log"
 	"shop-service/config"
 	authHandlers "shop-service/internal/handler/auth"
+	"shop-service/internal/middleware"
 	userRepository "shop-service/internal/repository/user"
 	"shop-service/internal/usecase/auth"
+	"shop-service/pkg/logger"
 
 	trmsql "github.com/avito-tech/go-transaction-manager/drivers/sql/v2"
 	"github.com/gofiber/fiber/v2"
@@ -17,6 +19,8 @@ import (
 )
 
 func main() {
+	logger.InitLogger()
+
 	cfg := config.MustLoadConfig()
 	fmt.Println("Postgres DSN:", cfg.PostgresConfig.DSN())
 
@@ -40,12 +44,13 @@ func main() {
 
 	authHandler := authHandlers.NewAuthHandlers(authUC)
 	app := fiber.New()
+	app.Use(middleware.ZerologMiddleware())
 
 	authHandlers.SetupAuthRoutes(app, authHandler)
 
-	log.Printf("Starting server on port %s...", cfg.ServerConfig.Port)
-	if err := app.Listen(":" + string(cfg.ServerConfig.Port)); err != nil {
-		log.Fatalf("failed to start server: %v", err)
+	logger.Log.Info().Msg("Starting Fiber server on port 8080...")
+	if err := app.Listen(":8080"); err != nil {
+		logger.Log.Fatal().Err(err).Msg("Failed to start server")
 	}
 }
 
