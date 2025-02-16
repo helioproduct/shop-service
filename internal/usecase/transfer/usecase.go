@@ -16,7 +16,7 @@ type (
 	}
 
 	UserRepository interface {
-		GetUserByID(ctx context.Context, userID domain.UserID) (*domain.User, error)
+		GetUserByUsername(ctx context.Context, username string) (*domain.User, error)
 		UpdateUser(ctx context.Context, req user.UpdateUserRequest) error
 	}
 )

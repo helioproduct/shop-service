@@ -10,8 +10,8 @@ import (
 )
 
 type SendCoinsRequest struct {
-	From   domain.UserID
-	To     domain.UserID
+	From   string
+	To     string
 	Amount uint64
 }
 
@@ -27,14 +27,14 @@ func (uc *TransferUsecase) SendCoins(ctx context.Context, req SendCoinsRequest) 
 	return uc.trm.Do(ctx, func(ctx context.Context) error {
 		log.Debug().Str("caller", caller).Msg("starting transaction")
 
-		sender, err := uc.userRepo.GetUserByID(ctx, req.From)
+		sender, err := uc.userRepo.GetUserByUsername(ctx, req.From)
 		if err != nil {
 			err = fmt.Errorf("error getting sender: %w", err)
 			log.Err(err).Str("caller", caller).Send()
 			return err
 		}
 
-		recipient, err := uc.userRepo.GetUserByID(ctx, req.To)
+		recipient, err := uc.userRepo.GetUserByUsername(ctx, req.To)
 		if err != nil {
 			err = fmt.Errorf("error getting recipient: %w", err)
 			log.Err(err).Str("caller", caller).Send()
@@ -69,8 +69,8 @@ func (uc *TransferUsecase) SendCoins(ctx context.Context, req SendCoinsRequest) 
 		}
 
 		transfer := domain.Transfer{
-			From:   req.From,
-			To:     req.To,
+			From:   sender.ID,
+			To:     recipient.ID,
 			Amount: req.Amount,
 		}
 
@@ -101,11 +101,11 @@ func (req *SendCoinsRequest) Validate() error {
 		return domain.ErrSameUser
 	}
 
-	if req.From == 0 {
+	if req.From == "" {
 		return domain.ErrMissingFromUser
 	}
 
-	if req.To == 0 {
+	if req.To == "" {
 		return domain.ErrMissingToUser
 	}
 
