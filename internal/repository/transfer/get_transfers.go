@@ -4,10 +4,9 @@ import (
 	"context"
 	"fmt"
 	"shop-service/internal/domain"
+	"shop-service/pkg/logger"
 
 	sq "github.com/Masterminds/squirrel"
-
-	"github.com/rs/zerolog/log"
 )
 
 type TotalTransfer struct {
@@ -57,7 +56,7 @@ func (r *TransferRepository) GetTransfers(ctx context.Context, filter GetTransfe
 	query, args, err := queryBuilder.ToSql()
 	if err != nil {
 		err = fmt.Errorf("failed to build GetTransfers query: %w", err)
-		log.Err(err).Str("caller", caller).Send()
+		logger.Error(err, caller)
 		return nil, err
 	}
 
@@ -65,7 +64,7 @@ func (r *TransferRepository) GetTransfers(ctx context.Context, filter GetTransfe
 	rows, err := trOrDB.QueryContext(ctx, query, args...)
 	if err != nil {
 		err = fmt.Errorf("failed to execute GetTransfers query: %w", err)
-		log.Err(err).Str("caller", caller).Send()
+		logger.Error(err, caller)
 		return nil, err
 	}
 	defer rows.Close()
@@ -79,7 +78,7 @@ func (r *TransferRepository) GetTransfers(ctx context.Context, filter GetTransfe
 			&fromUsername, &toUsername,
 		); err != nil {
 			err = fmt.Errorf("failed to scan GetTransfers result: %w", err)
-			log.Err(err).Str("caller", caller).Send()
+			logger.Error(err, caller)
 			return nil, err
 		}
 		t.FromUsername = fromUsername

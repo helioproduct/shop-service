@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"shop-service/internal/domain"
+	"shop-service/pkg/logger"
 
 	sq "github.com/Masterminds/squirrel"
 )
@@ -20,7 +21,7 @@ type PurchaseSummaryRequest struct {
 }
 
 func (r *PurchaseRepository) GetPurchaseSummary(ctx context.Context, req PurchaseSummaryRequest) ([]*PurchaseSummary, error) {
-	// caller := "PurchaseRepository.GetPurchaseSummary"
+	caller := "PurchaseRepository.GetPurchaseSummary"
 
 	queryBuilder := sq.Select(
 		"pr.id AS product_id",
@@ -39,27 +40,32 @@ func (r *PurchaseRepository) GetPurchaseSummary(ctx context.Context, req Purchas
 
 	query, args, err := queryBuilder.ToSql()
 	if err != nil {
-		return nil, fmt.Errorf("failed to build GetPurchaseSummary query: %w", err)
+		err = fmt.Errorf("failed to build GetPurchaseSummary query: %w", err)
+		logger.Error(err, caller)
+		return nil, err
 	}
 
 	trOrDB := r.txGetter.DefaultTrOrDB(ctx, r.db)
 	rows, err := trOrDB.QueryContext(ctx, query, args...)
 	if err != nil {
-		return nil, fmt.Errorf("failed to execute GetPurchaseSummary query: %w", err)
+		err = fmt.Errorf("failed to execute GetPurchaseSummary query: %w", err)
+		logger.Error(err, caller)
+		return nil, err
 	}
 	defer rows.Close()
 
 	var summaries []*PurchaseSummary
 	for rows.Next() {
 		summary := new(PurchaseSummary)
-		// var summary *PurchaseSummary
 		if err := rows.Scan(
 			&summary.Product.ID,
 			&summary.Product.Name,
 			&summary.Product.Price,
 			&summary.Amount,
 		); err != nil {
-			return nil, fmt.Errorf("failed to scan GetPurchaseSummary result: %w", err)
+			err = fmt.Errorf("failed to scan GetPurchaseSummary result: %w", err)
+			logger.Error(err, caller)
+			return nil, err
 		}
 		summaries = append(summaries, summary)
 	}

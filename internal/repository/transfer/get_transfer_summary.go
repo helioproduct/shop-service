@@ -3,6 +3,7 @@ package transfer
 import (
 	"context"
 	"fmt"
+	"shop-service/pkg/logger"
 
 	sq "github.com/Masterminds/squirrel"
 )
@@ -18,7 +19,7 @@ type ReceivedCoinsSummary struct {
 }
 
 func (r *TransferRepository) GetSentCoinsSummary(ctx context.Context, fromUsername string) ([]*SentCoinsSummary, error) {
-	// caller := "TransferRepository.GetSentCoinsSummary"
+	caller := "TransferRepository.GetSentCoinsSummary"
 
 	queryBuilder := sq.Select("tu.username AS to_username", "SUM(t.amount) AS total_sent").
 		From("transfers t").
@@ -30,19 +31,22 @@ func (r *TransferRepository) GetSentCoinsSummary(ctx context.Context, fromUserna
 
 	query, args, err := queryBuilder.ToSql()
 	if err != nil {
-		return nil, fmt.Errorf("failed to build GetSentCoinsSummary query: %w", err)
+		err = fmt.Errorf("failed to build GetSentCoinsSummary query: %w", err)
+		logger.Error(err, caller)
+		return nil, err
 	}
 
 	trOrDB := r.txGetter.DefaultTrOrDB(ctx, r.db)
 	rows, err := trOrDB.QueryContext(ctx, query, args...)
 	if err != nil {
-		return nil, fmt.Errorf("failed to execute GetSentCoinsSummary query: %w", err)
+		err = fmt.Errorf("failed to execute GetSentCoinsSummary query: %w", err)
+		logger.Error(err, caller)
+		return nil, err
 	}
 	defer rows.Close()
 
 	var summaries []*SentCoinsSummary
 	for rows.Next() {
-		// var summary *SentCoinsSummary
 		summary := new(SentCoinsSummary)
 		if err := rows.Scan(&summary.ToUsername, &summary.TotalSent); err != nil {
 			return nil, fmt.Errorf("failed to scan GetSentCoinsSummary result: %w", err)
@@ -54,7 +58,7 @@ func (r *TransferRepository) GetSentCoinsSummary(ctx context.Context, fromUserna
 }
 
 func (r *TransferRepository) GetReceivedCoinsSummary(ctx context.Context, toUsername string) ([]*ReceivedCoinsSummary, error) {
-	// caller := "TransferRepository.GetReceivedCoinsSummary"
+	caller := "TransferRepository.GetReceivedCoinsSummary"
 
 	queryBuilder := sq.Select("fu.username AS from_username", "SUM(t.amount) AS total_received").
 		From("transfers t").
@@ -66,7 +70,9 @@ func (r *TransferRepository) GetReceivedCoinsSummary(ctx context.Context, toUser
 
 	query, args, err := queryBuilder.ToSql()
 	if err != nil {
-		return nil, fmt.Errorf("failed to build GetReceivedCoinsSummary query: %w", err)
+		err = fmt.Errorf("failed to build GetReceivedCoinsSummary query: %w", err)
+		logger.Error(err, caller)
+		return nil, err
 	}
 
 	trOrDB := r.txGetter.DefaultTrOrDB(ctx, r.db)
@@ -78,7 +84,6 @@ func (r *TransferRepository) GetReceivedCoinsSummary(ctx context.Context, toUser
 
 	var summaries []*ReceivedCoinsSummary
 	for rows.Next() {
-		// var summary ReceivedCoinsSummary
 		summary := new(ReceivedCoinsSummary)
 		if err := rows.Scan(&summary.FromUsername, &summary.TotalReceived); err != nil {
 			return nil, fmt.Errorf("failed to scan GetReceivedCoinsSummary result: %w", err)

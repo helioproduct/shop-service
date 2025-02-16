@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"shop-service/internal/domain"
 	"shop-service/internal/repository/user"
+	"shop-service/pkg/logger"
 
 	"github.com/rs/zerolog/log"
 )
@@ -20,7 +21,7 @@ func (uc *TransferUsecase) SendCoins(ctx context.Context, req SendCoinsRequest) 
 
 	err := req.Validate()
 	if err != nil {
-		log.Err(err).Str("caller", caller).Msg("validation failed")
+		logger.Error(err, caller)
 		return err
 	}
 
@@ -30,20 +31,21 @@ func (uc *TransferUsecase) SendCoins(ctx context.Context, req SendCoinsRequest) 
 		sender, err := uc.userRepo.GetUserByUsername(ctx, req.From)
 		if err != nil {
 			err = fmt.Errorf("error getting sender: %w", err)
-			log.Err(err).Str("caller", caller).Send()
+			logger.Error(err, caller)
 			return err
 		}
 
 		recipient, err := uc.userRepo.GetUserByUsername(ctx, req.To)
 		if err != nil {
 			err = fmt.Errorf("error getting recipient: %w", err)
-			log.Err(err).Str("caller", caller).Send()
+			logger.Error(err, caller)
 			return err
 		}
 
 		if sender.Balance < req.Amount {
-			log.Error().Str("caller", caller).Msg("insufficient balance")
-			return domain.ErrInsufficientBalance
+			err = domain.ErrInsufficientBalance
+			logger.Error(err, caller)
+			return err
 		}
 
 		newSenderBalance := sender.Balance - req.Amount
@@ -53,7 +55,7 @@ func (uc *TransferUsecase) SendCoins(ctx context.Context, req SendCoinsRequest) 
 		})
 		if err != nil {
 			err = fmt.Errorf("failed to update sender balance: %w", err)
-			log.Err(err).Str("caller", caller).Send()
+			logger.Error(err, caller)
 			return err
 		}
 
@@ -64,7 +66,7 @@ func (uc *TransferUsecase) SendCoins(ctx context.Context, req SendCoinsRequest) 
 		})
 		if err != nil {
 			err = fmt.Errorf("failed to update recipient balance: %w", err)
-			log.Err(err).Str("caller", caller).Send()
+			logger.Error(err, caller)
 			return err
 		}
 
@@ -77,16 +79,15 @@ func (uc *TransferUsecase) SendCoins(ctx context.Context, req SendCoinsRequest) 
 		_, err = uc.transferRepo.CreateTransfer(ctx, transfer)
 		if err != nil {
 			err = fmt.Errorf("failed to create transfer record: %w", err)
-			log.Err(err).Str("caller", caller).Send()
+			logger.Error(err, caller)
 			return err
 		}
 
-		log.Info().
-			Str("caller", caller).
-			Str("from_user", sender.Username).
-			Str("to_user", recipient.Username).
-			Uint64("amount", req.Amount).
-			Msg("Transfer completed successfully")
+		logger.Info(caller, "Transfer completed successfully", map[string]interface{}{
+			"from_user": sender.Username,
+			"to_user":   recipient.Username,
+			"amount":    req.Amount,
+		})
 
 		return nil
 	})

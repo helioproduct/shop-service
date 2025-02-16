@@ -6,6 +6,7 @@ import (
 	"shop-service/internal/domain"
 	purchaseRepository "shop-service/internal/repository/purchase"
 	userRepository "shop-service/internal/repository/user"
+	"shop-service/pkg/logger"
 )
 
 type BuyItemRequest struct {
@@ -15,25 +16,34 @@ type BuyItemRequest struct {
 }
 
 func (uc *PurchaseUsecase) BuyItemByName(ctx context.Context, req BuyItemRequest) error {
+	caller := "PurchaseUsecase.BuyItemByName"
+
 	return uc.trm.Do(ctx, func(ctx context.Context) error {
 		user, err := uc.userRepo.GetUserByUsername(ctx, req.Username)
 		if err != nil {
-			return fmt.Errorf("failed to get user: %w", err)
+			err = fmt.Errorf("failed to get user: %w", err)
+			return err
 		}
 
 		product, err := uc.productRepo.GetProductByName(ctx, req.ProductName)
 		if err != nil {
-			return fmt.Errorf("failed to get product: %w", err)
+			err = fmt.Errorf("failed to get product: %w", err)
+			logger.Error(err, caller)
+			return err
 		}
 
 		totalCost := product.Price * req.Quantity
 		if user.Balance < totalCost {
-			return fmt.Errorf("insufficient balance: have %d, need %d", user.Balance, totalCost)
+			err = domain.ErrInsufficientBalance
+			logger.Error(err, caller)
+			return err
 		}
 
 		purchaseReq := mapBuyItemRequest(req, user, product)
 		if _, err = uc.purchaseRepo.CreatePurchase(ctx, purchaseReq); err != nil {
-			return fmt.Errorf("failed to create purchase: %w", err)
+			err = fmt.Errorf("failed to create purchase: %w", err)
+			logger.Error(err, caller)
+			return err
 		}
 
 		updatedBalance := user.Balance - totalCost
@@ -43,7 +53,9 @@ func (uc *PurchaseUsecase) BuyItemByName(ctx context.Context, req BuyItemRequest
 		}
 
 		if err := uc.userRepo.UpdateUser(ctx, updateReq); err != nil {
-			return fmt.Errorf("failed to update user balance: %w", err)
+			err = fmt.Errorf("failed to update user balance: %w", err)
+			logger.Error(err, caller)
+			return err
 		}
 
 		return nil

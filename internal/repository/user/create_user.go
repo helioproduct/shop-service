@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"shop-service/internal/domain"
+	"shop-service/pkg/logger"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/rs/zerolog/log"
 )
 
 type CreateUserRequest struct {
@@ -26,7 +26,7 @@ func (r *UserRepository) CreateUser(ctx context.Context, req CreateUserRequest) 
 		ToSql()
 	if err != nil {
 		err = fmt.Errorf("failed to build CreateUser query: %w", err)
-		log.Err(err).Str("caller", caller).Send()
+		logger.Error(err, caller)
 		return nil, err
 	}
 
@@ -35,7 +35,7 @@ func (r *UserRepository) CreateUser(ctx context.Context, req CreateUserRequest) 
 	if err := trOrDB.QueryRowContext(ctx, query, args...).
 		Scan(&user.ID, &user.Username, &user.Balance); err != nil {
 		err = fmt.Errorf("failed to insert user: %w", err)
-		log.Err(err).Str("caller", caller).Send()
+		logger.Error(err, caller)
 		return nil, err
 	}
 

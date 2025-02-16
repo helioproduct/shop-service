@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"shop-service/internal/domain"
 	"shop-service/pkg/hasher"
+	"shop-service/pkg/logger"
 	"time"
 )
 
@@ -14,19 +15,26 @@ type LoginRequest struct {
 }
 
 func (uc *AuthUsecase) Login(ctx context.Context, req LoginRequest) (*domain.Session, error) {
+	caller := "AuthUsecase.Login"
+
 	hashedPassword, err := uc.userRepo.GetUserHashedPassword(ctx, req.Username)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get user hashed password: %w", err)
+		err = fmt.Errorf("failed to get user hashed password: %w", err)
+		logger.Error(err, caller)
+		return nil, err
 	}
 
 	if !hasher.HashAndCompare(req.Password, hashedPassword) {
-		return nil, fmt.Errorf("invalid password")
-
+		err = fmt.Errorf("invalid password")
+		logger.Error(err, caller)
+		return nil, err
 	}
 
 	token, err := uc.generateJWT(&domain.User{Username: req.Username})
 	if err != nil {
-		return nil, fmt.Errorf("failed to generate token: %w", err)
+		err = fmt.Errorf("failed to generate token: %w", err)
+		logger.Error(err, caller)
+		return nil, err
 	}
 
 	return &domain.Session{

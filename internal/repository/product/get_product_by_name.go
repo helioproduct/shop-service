@@ -5,9 +5,9 @@ import (
 	"database/sql"
 	"fmt"
 	"shop-service/internal/domain"
+	"shop-service/pkg/logger"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/rs/zerolog/log"
 )
 
 func (repo *ProductRepository) GetProductByName(ctx context.Context, name string) (*domain.Product, error) {
@@ -20,7 +20,7 @@ func (repo *ProductRepository) GetProductByName(ctx context.Context, name string
 		ToSql()
 	if err != nil {
 		err = fmt.Errorf("failed to build GetProductByName query: %w", err)
-		log.Err(err).Str("caller", caller).Send()
+		logger.Error(err, caller)
 		return nil, err
 	}
 
@@ -32,7 +32,7 @@ func (repo *ProductRepository) GetProductByName(ctx context.Context, name string
 			return nil, domain.ErrProductNotFound
 		}
 		err = fmt.Errorf("failed to execute GetProductByName query: %w", err)
-		log.Err(err).Str("caller", caller).Send()
+		logger.Error(err, caller)
 		return nil, err
 	}
 

@@ -4,10 +4,9 @@ import (
 	"context"
 	"fmt"
 	"shop-service/internal/domain"
+	"shop-service/pkg/logger"
 
 	sq "github.com/Masterminds/squirrel"
-
-	"github.com/rs/zerolog/log"
 )
 
 type UpdateUserRequest struct {
@@ -38,7 +37,7 @@ func (r *UserRepository) UpdateUser(ctx context.Context, req UpdateUserRequest) 
 	query, args, err := queryBuilder.ToSql()
 	if err != nil {
 		err = fmt.Errorf("failed to build UpdateUser query: %w", err)
-		log.Err(err).Str("caller", caller).Send()
+		logger.Error(err, caller)
 		return err
 	}
 
@@ -46,14 +45,14 @@ func (r *UserRepository) UpdateUser(ctx context.Context, req UpdateUserRequest) 
 	result, err := trOrDB.ExecContext(ctx, query, args...)
 	if err != nil {
 		err = fmt.Errorf("failed to execute UpdateUser query: %w", err)
-		log.Err(err).Str("caller", caller).Send()
+		logger.Error(err, caller)
 		return err
 	}
 
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
 		err = fmt.Errorf("failed to get affected rows: %w", err)
-		log.Err(err).Str("caller", caller).Send()
+		logger.Error(err, caller)
 		return err
 	}
 	if rowsAffected == 0 {

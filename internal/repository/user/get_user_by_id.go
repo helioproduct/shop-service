@@ -6,9 +6,9 @@ import (
 	"errors"
 	"fmt"
 	"shop-service/internal/domain"
+	"shop-service/pkg/logger"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/rs/zerolog/log"
 )
 
 func (r *UserRepository) GetUserByID(ctx context.Context, userID domain.UserID) (*domain.User, error) {
@@ -21,7 +21,7 @@ func (r *UserRepository) GetUserByID(ctx context.Context, userID domain.UserID) 
 		ToSql()
 	if err != nil {
 		err = fmt.Errorf("failed to build GetUserByID query: %w", err)
-		log.Err(err).Str("caller", caller).Send()
+		logger.Error(err, caller)
 		return nil, err
 	}
 
@@ -33,9 +33,8 @@ func (r *UserRepository) GetUserByID(ctx context.Context, userID domain.UserID) 
 			return nil, domain.ErrUserNotFound
 		}
 		err = fmt.Errorf("failed to execute GetUserByID query: %w", err)
-		log.Err(err).Str("caller", caller).Send()
+		logger.Error(err, caller)
 		return nil, err
 	}
-
 	return &user, nil
 }

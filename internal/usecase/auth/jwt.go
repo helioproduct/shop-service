@@ -3,6 +3,7 @@ package auth
 import (
 	"fmt"
 	"shop-service/internal/domain"
+	"shop-service/pkg/logger"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -31,17 +32,23 @@ func (uc *AuthUsecase) generateJWT(user *domain.User) (string, error) {
 }
 
 func (uc *AuthUsecase) parseJWT(tokenString string) (*Claims, error) {
+	caller := "AuthUsecase.parseJWT"
+
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(uc.cfg.JWTConfig.Secret), nil
 	})
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse token: %w", err)
+		err = fmt.Errorf("failed to parse token: %w", err)
+		logger.Error(err, caller)
+		return nil, err
 	}
 
 	claims, ok := token.Claims.(*Claims)
 	if !ok || !token.Valid {
-		return nil, fmt.Errorf("invalid token")
+		err = fmt.Errorf("invalid token")
+		logger.Error(err, caller)
+		return nil, err
 	}
 
 	return claims, nil

@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"shop-service/internal/domain"
+	"shop-service/pkg/logger"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/rs/zerolog/log"
 )
 
 type CreatePurchaseRequest struct {
@@ -26,7 +26,7 @@ func (r *PurchaseRepository) CreatePurchase(ctx context.Context, req CreatePurch
 		ToSql()
 	if err != nil {
 		err = fmt.Errorf("failed to build CreatePurchase query: %w", err)
-		log.Err(err).Str("caller", caller).Send()
+		logger.Error(err, caller)
 		return nil, err
 	}
 
@@ -40,7 +40,7 @@ func (r *PurchaseRepository) CreatePurchase(ctx context.Context, req CreatePurch
 		&purchase.Time,
 	); err != nil {
 		err = fmt.Errorf("failed to execute CreatePurchase query: %w", err)
-		log.Err(err).Str("caller", caller).Send()
+		logger.Error(err, caller)
 		return nil, err
 	}
 

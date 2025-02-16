@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"shop-service/internal/domain"
+	"shop-service/pkg/logger"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/rs/zerolog/log"
 )
 
 func (r *TransferRepository) CreateTransfer(ctx context.Context, transfer domain.Transfer) (*domain.Transfer, error) {
@@ -20,7 +20,7 @@ func (r *TransferRepository) CreateTransfer(ctx context.Context, transfer domain
 		ToSql()
 	if err != nil {
 		err = fmt.Errorf("failed to build CreateTransfer query: %w", err)
-		log.Err(err).Str("caller", caller).Send()
+		logger.Error(err, caller)
 		return nil, err
 	}
 
@@ -29,7 +29,7 @@ func (r *TransferRepository) CreateTransfer(ctx context.Context, transfer domain
 	if err := trOrDB.QueryRowContext(ctx, query, args...).
 		Scan(&createdTransfer.ID, &createdTransfer.Time); err != nil {
 		err = fmt.Errorf("failed to execute CreateTransfer query: %w", err)
-		log.Err(err).Str("caller", caller).Send()
+		logger.Error(err, caller)
 		return nil, err
 	}
 

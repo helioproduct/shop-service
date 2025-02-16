@@ -6,9 +6,9 @@ import (
 	"errors"
 	"fmt"
 	"shop-service/internal/domain"
+	"shop-service/pkg/logger"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/rs/zerolog/log"
 )
 
 func (repo *UserRepository) GetUserHashedPassword(ctx context.Context, username string) (string, error) {
@@ -21,7 +21,7 @@ func (repo *UserRepository) GetUserHashedPassword(ctx context.Context, username 
 		ToSql()
 	if err != nil {
 		err = fmt.Errorf("failed to build GetUserHashedPassword query: %w", err)
-		log.Err(err).Str("caller", caller).Send()
+		logger.Error(err, caller)
 		return "", err
 	}
 
@@ -31,7 +31,7 @@ func (repo *UserRepository) GetUserHashedPassword(ctx context.Context, username 
 			return "", domain.ErrUserNotFound
 		}
 		err = fmt.Errorf("failed to execute GetUserHashedPassword query: %w", err)
-		log.Err(err).Str("caller", caller).Send()
+		logger.Error(err, caller)
 		return "", err
 	}
 
