@@ -23,14 +23,14 @@ func TestPurchaseFlow(t *testing.T) {
 
 	// 1. Регистрация пользователя
 	registerResp := makeRequest(t, "POST", "/auth/register", map[string]string{
-		"username": "testuser6",
+		"username": "testuser7",
 		"password": "password123",
 	})
 	assert.Equal(t, http.StatusOK, registerResp.StatusCode)
 
 	// 2. Авторизация пользователя
 	loginResp := makeRequest(t, "POST", "/auth/login", map[string]string{
-		"username": "testuser6",
+		"username": "testuser7",
 		"password": "password123",
 	})
 	assert.Equal(t, http.StatusOK, loginResp.StatusCode)
