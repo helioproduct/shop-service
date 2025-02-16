@@ -2,11 +2,13 @@ package user
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"shop-service/internal/domain"
 	"shop-service/pkg/logger"
 
 	sq "github.com/Masterminds/squirrel"
+	"github.com/jackc/pgconn"
 )
 
 type CreateUserRequest struct {
@@ -34,6 +36,16 @@ func (r *UserRepository) CreateUser(ctx context.Context, req CreateUserRequest) 
 	trOrDB := r.txGetter.DefaultTrOrDB(ctx, r.db)
 	if err := trOrDB.QueryRowContext(ctx, query, args...).
 		Scan(&user.ID, &user.Username, &user.Balance); err != nil {
+
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
+			logger.Error(domain.ErrUserExists, caller)
+			logger.Print(caller, "here", "here2")
+			return nil, domain.ErrUserExists
+		}
+
+		logger.Print(caller, "here", "here3")
+
 		err = fmt.Errorf("failed to insert user: %w", err)
 		logger.Error(err, caller)
 		return nil, err
