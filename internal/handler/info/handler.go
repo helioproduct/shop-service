@@ -5,7 +5,6 @@ import (
 	purchaseRepository "shop-service/internal/repository/purchase"
 	"shop-service/internal/repository/transfer"
 	purhcaseUsecase "shop-service/internal/usecase/purchase"
-	transferUsecase "shop-service/internal/usecase/transfer"
 )
 
 type (
@@ -17,7 +16,6 @@ type (
 	TransferUsecsae interface {
 		GetSentCoinsSummary(ctx context.Context, username string) ([]*transfer.SentCoinsSummary, error)
 		GetReceivedCoinsSummary(ctx context.Context, username string) ([]*transfer.ReceivedCoinsSummary, error)
-		SendCoins(ctx context.Context, req transferUsecase.SendCoinsRequest) error
 	}
 
 	UserUsecase interface {
