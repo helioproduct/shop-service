@@ -4,8 +4,6 @@ import (
 	"context"
 	"shop-service/internal/domain"
 
-	"github.com/gofiber/fiber/v2"
-
 	authUsecase "shop-service/internal/usecase/auth"
 )
 
@@ -25,9 +23,4 @@ func NewAuthHandlers(authUC AuthUsecase) *AuthHandlers {
 	return &AuthHandlers{
 		authUC: authUC,
 	}
-}
-
-func SetupAuthRoutes(app *fiber.App, handlers *AuthHandlers) {
-	app.Post("/auth/register", handlers.Register)
-	app.Post("/auth/login", handlers.Login)
 }

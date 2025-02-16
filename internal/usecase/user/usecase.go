@@ -15,5 +15,4 @@ type UserUsecase struct {
 
 func NewUserUsecase(userRepo UserRepository) *UserUsecase {
 	return &UserUsecase{userRepo: userRepo}
-
 }

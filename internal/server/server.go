@@ -77,7 +77,11 @@ func (s *Server) Initialize() error {
 	authHandlers.SetupAuthRoutes(s.app, authHandler)
 	authMiddleware := middleware.NewAuthMiddleware(authUC)
 
-	api := s.app.Group("/api", authMiddleware.Handle())
+	auth := s.app.Group("/auth")
+	auth.Post("/register", authHandler.Register)
+	auth.Post("/login", authHandler.Login)
+
+	api := s.app.Group("/api", authMiddleware.Auth())
 	api.Get("/profile", func(c *fiber.Ctx) error {
 		session, _ := middleware.GetSessionFromContext(c)
 		return c.JSON(fiber.Map{

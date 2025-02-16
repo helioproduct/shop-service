@@ -21,9 +21,8 @@ func NewAuthMiddleware(authUsecase AuthUsecase) *AuthMiddleware {
 	return &AuthMiddleware{authUsecase: authUsecase}
 }
 
-func (m *AuthMiddleware) Handle() fiber.Handler {
+func (m *AuthMiddleware) Auth() fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		// Извлекаем токен из заголовка Authorization
 		authHeader := c.Get("Authorization")
 		if authHeader == "" {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "missing authorization header"})
