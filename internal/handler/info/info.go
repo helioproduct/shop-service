@@ -4,7 +4,6 @@ import (
 	"shop-service/internal/middleware"
 	"shop-service/pkg/logger"
 
-	// "shop-service/internal/middleware"
 	"shop-service/internal/repository/purchase"
 
 	"github.com/gofiber/fiber/v2"
@@ -32,25 +31,22 @@ type InfoResponse struct {
 }
 
 func (h *Hanlder) HandleInfo(c *fiber.Ctx) error {
-	caller := "HandleInfo"
+	caller := "Handler.HandleInfo"
 
-	// Получаем сессию из контекста
 	session, ok := middleware.GetSessionFromContext(c)
 	if !ok {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "unauthorized"})
 	}
 
-	// Получаем баланс
 	coins, err := h.userUsecase.GetBalance(c.Context(), session.Username)
 	if err != nil {
 		logger.Error(err, caller)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "failed to get balance"})
 	}
 
-	// Получаем инвентарь
 	inventoryItems, err := h.purchaseUsecase.GetSummary(c.Context(), purchase.PurchaseSummaryRequest{
 		UserID: session.UserID,
-		Limit:  100, // Пример ограничения
+		Limit:  100,
 		Offset: 0,
 	})
 	if err != nil {
@@ -58,7 +54,6 @@ func (h *Hanlder) HandleInfo(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "failed to get inventory"})
 	}
 
-	// Преобразуем покупки в инвентарь
 	var inventory []InventoryItem
 	for _, item := range inventoryItems {
 		inventory = append(inventory, InventoryItem{
@@ -67,21 +62,18 @@ func (h *Hanlder) HandleInfo(c *fiber.Ctx) error {
 		})
 	}
 
-	// Получаем отправленные монеты
 	sentCoins, err := h.transferUsecase.GetSentCoinsSummary(c.Context(), session.Username)
 	if err != nil {
 		logger.Error(err, caller)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "failed to get sent coins"})
 	}
 
-	// Получаем полученные монеты
 	receivedCoins, err := h.transferUsecase.GetReceivedCoinsSummary(c.Context(), session.Username)
 	if err != nil {
 		logger.Error(err, caller)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "failed to get received coins"})
 	}
 
-	// Формируем историю монет
 	coinHistory := CoinHistory{
 		Received: make([]CoinHistoryItem, 0),
 		Sent:     make([]CoinHistoryItem, 0),
@@ -101,7 +93,6 @@ func (h *Hanlder) HandleInfo(c *fiber.Ctx) error {
 		})
 	}
 
-	// Формируем ответ
 	response := InfoResponse{
 		Coins:       coins,
 		Inventory:   inventory,

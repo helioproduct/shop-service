@@ -1,4 +1,3 @@
-// server/server.go
 package server
 
 import (
@@ -84,7 +83,7 @@ func (s *Server) Initialize() error {
 		})
 	})
 	api.Get("/info", infoHandler.HandleInfo)
-	api.Get("/buy/:item", purchaseHandler.HandleBuyItem)
+	api.Get("/buy/:item", purchaseHandler.HandlePurchase)
 
 	return nil
 }

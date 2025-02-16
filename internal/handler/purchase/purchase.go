@@ -20,8 +20,8 @@ type BuyItemResponse struct {
 	Balance uint64 `json:"balance"`
 }
 
-func (h *Handler) HandleBuyItem(c *fiber.Ctx) error {
-	caller := "HandleBuyItem"
+func (h *Handler) HandlePurchase(c *fiber.Ctx) error {
+	caller := "Handler.HandleBuyItem"
 
 	session, ok := middleware.GetSessionFromContext(c)
 	if !ok {
