@@ -11,6 +11,12 @@ type SendCoinsRequest struct {
 	Amount uint64
 }
 
-func (uc *TransferUsecase) SendCoins(ctx context.Context) error {
+func (uc *TransferUsecase) SendCoins(ctx context.Context, req SendCoinsRequest) error {
+
+	uc.trm.Do(ctx, func(ctx context.Context) error {
+
+		return nil
+	})
+
 	return nil
 }

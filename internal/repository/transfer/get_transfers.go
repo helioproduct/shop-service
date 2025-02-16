@@ -17,7 +17,7 @@ type GetTransfersFilter struct {
 	Offset     uint64
 }
 
-func (r *TransferRepository) GetTransfers(ctx context.Context, filter *GetTransfersFilter) ([]domain.Transfer, error) {
+func (r *TransferRepository) GetTransfers(ctx context.Context, filter GetTransfersFilter) ([]domain.Transfer, error) {
 	caller := "TransferRepository.GetTransfers"
 
 	queryBuilder := sq.Select("id", "from_user_id", "to_user_id", "amount", "created_at").

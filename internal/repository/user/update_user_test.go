@@ -27,7 +27,7 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 	balance := uint64(200)
 
 	t.Run("Success - Update all fields", func(t *testing.T) {
-		req := &userRepo.UpdateUserRequest{
+		req := userRepo.UpdateUserRequest{
 			UserID:         1,
 			Username:       &username,
 			HashedPassword: &hashedPassword,
@@ -45,7 +45,7 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 	})
 
 	t.Run("Success - Update username only", func(t *testing.T) {
-		req := &userRepo.UpdateUserRequest{
+		req := userRepo.UpdateUserRequest{
 			UserID:   2,
 			Username: &username,
 		}
@@ -61,7 +61,7 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 	})
 
 	t.Run("User Not Found", func(t *testing.T) {
-		req := &userRepo.UpdateUserRequest{
+		req := userRepo.UpdateUserRequest{
 			UserID:   999,
 			Username: &username,
 		}
@@ -77,7 +77,7 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 	})
 
 	t.Run("Database Error", func(t *testing.T) {
-		req := &userRepo.UpdateUserRequest{
+		req := userRepo.UpdateUserRequest{
 			UserID:   3,
 			Username: &username,
 		}
@@ -94,7 +94,7 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 	})
 
 	t.Run("Error Getting Rows Affected", func(t *testing.T) {
-		req := &userRepo.UpdateUserRequest{
+		req := userRepo.UpdateUserRequest{
 			UserID:   4,
 			Username: &username,
 		}

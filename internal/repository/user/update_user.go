@@ -17,7 +17,7 @@ type UpdateUserRequest struct {
 	Balance        *uint64
 }
 
-func (r *UserRepository) UpdateUser(ctx context.Context, req *UpdateUserRequest) error {
+func (r *UserRepository) UpdateUser(ctx context.Context, req UpdateUserRequest) error {
 	caller := "UserRepository.UpdateUser"
 
 	queryBuilder := sq.Update("users").

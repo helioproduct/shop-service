@@ -29,7 +29,7 @@ func TestUserRepository_CreateUser(t *testing.T) {
 
 	repo := userRepo.NewUserRepository(db, trmsql.DefaultCtxGetter)
 
-	req := &userRepo.CreateUserRequest{
+	req := userRepo.CreateUserRequest{
 		Username:       "test_user",
 		HashedPassword: "hashed_password",
 		Balance:        100,

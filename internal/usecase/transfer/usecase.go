@@ -4,18 +4,20 @@ import (
 	"context"
 	"shop-service/internal/domain"
 	"shop-service/internal/repository/transfer"
+	"shop-service/internal/repository/user"
 
 	"github.com/avito-tech/go-transaction-manager/trm"
 )
 
 type (
 	TransferRepository interface {
-		CreateTransfer(ctx context.Context, transfer *domain.Transfer) (*domain.Transfer, error)
-		GetTransfers(ctx context.Context, filter *transfer.GetTransfersFilter) ([]domain.Transfer, error)
+		CreateTransfer(ctx context.Context, transfer domain.Transfer) (*domain.Transfer, error)
+		GetTransfers(ctx context.Context, filter transfer.GetTransfersFilter) ([]domain.Transfer, error)
 	}
 
 	UserRepository interface {
 		GetUserByID(ctx context.Context, userID domain.UserID) (*domain.User, error)
+		UpdateUser(ctx context.Context, req user.UpdateUserRequest) error
 	}
 )
 

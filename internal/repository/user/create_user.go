@@ -15,7 +15,7 @@ type CreateUserRequest struct {
 	Balance        int
 }
 
-func (r *UserRepository) CreateUser(ctx context.Context, req *CreateUserRequest) (*domain.User, error) {
+func (r *UserRepository) CreateUser(ctx context.Context, req CreateUserRequest) (*domain.User, error) {
 	caller := "UserRepository.CreateUser"
 
 	query, args, err := sq.Insert("users").

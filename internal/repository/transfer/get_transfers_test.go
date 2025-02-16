@@ -30,7 +30,7 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 		limit := uint64(5)
 		offset := uint64(0)
 
-		filter := &transfer.GetTransfersFilter{
+		filter := transfer.GetTransfersFilter{
 			FromUserID: &fromUserID,
 			ToUserID:   &toUserID,
 			Limit:      limit,
@@ -60,7 +60,7 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 
 	t.Run("Database error", func(t *testing.T) {
 		fromUserID := domain.UserID(1)
-		filter := &transfer.GetTransfersFilter{
+		filter := transfer.GetTransfersFilter{
 			FromUserID: &fromUserID,
 		}
 
@@ -78,7 +78,7 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 
 	t.Run("Scan error", func(t *testing.T) {
 		fromUserID := domain.UserID(1)
-		filter := &transfer.GetTransfersFilter{
+		filter := transfer.GetTransfersFilter{
 			FromUserID: &fromUserID,
 		}
 
@@ -97,7 +97,7 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 	t.Run("Success - Filter by FromUserID only", func(t *testing.T) {
 		fromUserID := domain.UserID(1)
 
-		filter := &transfer.GetTransfersFilter{
+		filter := transfer.GetTransfersFilter{
 			FromUserID: &fromUserID,
 		}
 
@@ -125,7 +125,7 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 	t.Run("No results for FromUserID", func(t *testing.T) {
 		fromUserID := domain.UserID(100)
 
-		filter := &transfer.GetTransfersFilter{
+		filter := transfer.GetTransfersFilter{
 			FromUserID: &fromUserID,
 		}
 
@@ -143,7 +143,7 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 	t.Run("Success - Filter by ToUserID only", func(t *testing.T) {
 		toUserID := domain.UserID(2)
 
-		filter := &transfer.GetTransfersFilter{
+		filter := transfer.GetTransfersFilter{
 			ToUserID: &toUserID,
 		}
 
@@ -171,7 +171,7 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 	t.Run("No results for ToUserID", func(t *testing.T) {
 		toUserID := domain.UserID(999)
 
-		filter := &transfer.GetTransfersFilter{
+		filter := transfer.GetTransfersFilter{
 			ToUserID: &toUserID,
 		}
 
@@ -190,7 +190,7 @@ func TestTransferRepository_GetTransfers(t *testing.T) {
 		fromUserID := domain.UserID(10)
 		toUserID := domain.UserID(20)
 
-		filter := &transfer.GetTransfersFilter{
+		filter := transfer.GetTransfersFilter{
 			FromUserID: &fromUserID,
 			ToUserID:   &toUserID,
 		}
