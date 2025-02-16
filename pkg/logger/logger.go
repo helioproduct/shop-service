@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -14,13 +15,18 @@ func InitLogger() {
 	Log = zerolog.New(os.Stdout).
 		With().
 		Timestamp().
-		Caller().
 		Logger().
 		Level(zerolog.InfoLevel)
 }
 
 func Error(err error, caller string) {
-	Log.Err(err).Str("caller", caller).Send()
+	if err != nil {
+		Log.
+			Err(err).
+			Str("caller", caller).
+			Str("error", err.Error()).
+			Send()
+	}
 }
 
 func Info(caller string, msg string, fields map[string]interface{}) {
@@ -61,4 +67,8 @@ func Debug(caller string, msg string, fields map[string]interface{}) {
 		event.Interface(k, v)
 	}
 	event.Msg(msg)
+}
+
+func Print(caller string, arg interface{}) {
+	fmt.Printf("[caller: %s] %v\n", caller, arg)
 }
