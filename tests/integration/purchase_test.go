@@ -54,7 +54,6 @@ func TestPurchaseFlow(t *testing.T) {
 	decodeJSON(t, infoResp.Body, &infoData)
 }
 
-// Вспомогательные функции
 func makeRequest(t *testing.T, method, path string, body interface{}) *http.Response {
 	reqBody, _ := json.Marshal(body)
 	resp, err := http.Post(baseURL+path, "application/json", bytes.NewReader(reqBody))
