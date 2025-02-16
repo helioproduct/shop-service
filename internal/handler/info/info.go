@@ -2,6 +2,7 @@ package info
 
 import (
 	"shop-service/internal/middleware"
+	"shop-service/pkg/constant"
 	"shop-service/pkg/logger"
 
 	"shop-service/internal/repository/purchase"
@@ -46,8 +47,8 @@ func (h *Hanlder) HandleInfo(c *fiber.Ctx) error {
 
 	inventoryItems, err := h.purchaseUsecase.GetSummary(c.Context(), purchase.PurchaseSummaryRequest{
 		UserID: session.UserID,
-		Limit:  100,
-		Offset: 0,
+		Limit:  constant.DefaultLimit,
+		Offset: constant.DefaultOffet,
 	})
 	if err != nil {
 		logger.Error(err, caller)
