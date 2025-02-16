@@ -6,6 +6,12 @@ postgres:
   dbname: "shop"
   sslmode: "disable"
 
+
+jwt:
+  secret: "my_jwt_secret"
+  expiration_hours: 24
+
+
 server:
   port: 8080
 

@@ -11,16 +11,12 @@ import (
 type Config struct {
 	PostgresConfig `yaml:"postgres"`
 	ServerConfig   struct {
-	}
+		Port int `yaml:"port"`
+	} `yaml:"server"`
 	JWTConfig struct {
-		Salt string
-	}
-	Tables struct {
-		Users     string
-		Products  string
-		Purchases string
-		Transfers string
-	}
+		Secret          string `yaml:"secret"`
+		ExpirationHours int    `yaml:"expiration_hours"`
+	} `yaml:"jwt"`
 }
 
 func LoadConfig() (*Config, error) {
