@@ -42,7 +42,7 @@ func (h *Hanlder) HandleInfo(c *fiber.Ctx) error {
 	coins, err := h.userUsecase.GetBalance(c.Context(), session.Username)
 	if err != nil {
 		logger.Error(err, caller)
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "failed to get balance"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	inventoryItems, err := h.purchaseUsecase.GetSummary(c.Context(), purchase.PurchaseSummaryRequest{
@@ -52,7 +52,7 @@ func (h *Hanlder) HandleInfo(c *fiber.Ctx) error {
 	})
 	if err != nil {
 		logger.Error(err, caller)
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "failed to get inventory"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	var inventory []InventoryItem
@@ -66,13 +66,13 @@ func (h *Hanlder) HandleInfo(c *fiber.Ctx) error {
 	sentCoins, err := h.transferUsecase.GetSentCoinsSummary(c.Context(), session.Username)
 	if err != nil {
 		logger.Error(err, caller)
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "failed to get sent coins"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	receivedCoins, err := h.transferUsecase.GetReceivedCoinsSummary(c.Context(), session.Username)
 	if err != nil {
 		logger.Error(err, caller)
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "failed to get received coins"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	coinHistory := CoinHistory{

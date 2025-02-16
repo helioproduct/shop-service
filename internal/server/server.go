@@ -74,7 +74,6 @@ func (s *Server) Initialize() error {
 	s.app = fiber.New()
 	s.app.Use(middleware.ZerologMiddleware())
 
-	authHandlers.SetupAuthRoutes(s.app, authHandler)
 	authMiddleware := middleware.NewAuthMiddleware(authUC)
 
 	auth := s.app.Group("/auth")
