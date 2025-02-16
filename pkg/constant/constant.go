@@ -10,3 +10,7 @@ var (
 	DefaultLimit = uint64(100)
 	DefaultOffet = uint64(0)
 )
+
+var (
+	DefaultBalance = 1000
+)

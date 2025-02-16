@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"shop-service/internal/domain"
 	userRepository "shop-service/internal/repository/user"
+	"shop-service/pkg/constant"
 	"shop-service/pkg/hasher"
 	"shop-service/pkg/logger"
 	"time"
@@ -51,5 +52,6 @@ func (r *RegisterRequest) mapRegisterRequest() (*userRepository.CreateUserReques
 	return &userRepository.CreateUserRequest{
 		Username:       r.Username,
 		HashedPassword: hashedPassword,
+		Balance:        constant.DefaultBalance,
 	}, nil
 }
